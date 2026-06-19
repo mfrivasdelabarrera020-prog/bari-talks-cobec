@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bari Talks con COBEC — Panel de Contenido</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+  :root{
+    --verde:#2D4A3E;
+    --verde-claro:#3E6354;
+    --dorado:#C9A96E;
+    --dorado-suave:#E3D2AC;
+    --crema:#F7F3EE;
+    --crema-osc:#EFE8DD;
+    --rosa:#C99A9E;
+    --texto:#2A2926;
+    --texto-suave:#6B6660;
+    --blanco:#FFFFFF;
+    --borde:#E2D9C9;
+    --sombra: 0 4px 18px rgba(45,74,62,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--crema);
+    font-family:'Montserrat', Arial, sans-serif;
+    color:var(--texto);
+  }
+  h1,h2,h3,.display{
+    font-family:'Georgia', 'Times New Roman', serif;
+    letter-spacing:0.3px;
+  }
+
+  /* ===== HEADER ===== */
+  header{
+    background:linear-gradient(135deg, var(--verde) 0%, var(--verde-claro) 100%);
+    color:var(--crema);
+    padding:28px 36px 26px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  .brand-eyebrow{
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--dorado-suave);
+    margin-bottom:6px;
+  }
+  header h1{
+    font-size:30px;
+    margin:0;
+    color:var(--blanco);
+  }
+  header p.sub{
+    margin:6px 0 0;
+    font-size:13px;
+    color:var(--dorado-suave);
+    font-family:'Montserrat',sans-serif;
+  }
+  .mic-icon{
+    width:46px;height:46px;
+    border-radius:50%;
+    border:2px solid var(--dorado);
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+    flex-shrink:0;
+  }
+  .header-left{display:flex; align-items:center; gap:14px;}
+
+  /* ===== NAV TABS ===== */
+  .tabs{
+    display:flex;
+    gap:4px;
+    padding:0 36px;
+    background:var(--blanco);
+    border-bottom:1px solid var(--borde);
+    overflow-x:auto;
+  }
+  .tab{
+    padding:16px 20px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--texto-suave);
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+    transition:all .15s;
+  }
+  .tab:hover{ color:var(--verde); }
+  .tab.active{
+    color:var(--verde);
+    border-bottom-color:var(--dorado);
+  }
+
+  main{ padding:28px 36px 60px; max-width:1400px; margin:0 auto; }
+  .view{ display:none; }
+  .view.active{ display:block; animation:fade .25s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+
+  /* ===== STAT CARDS ===== */
+  .stats-row{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:16px;
+    margin-bottom:28px;
+  }
+  .stat-card{
+    background:var(--blanco);
+    border:1px solid var(--borde);
+    border-radius:10px;
+    padding:18px 20px;
+    box-shadow:var(--sombra);
+    position:relative;
+    overflow:hidden;
+  }
+  .stat-card::before{
+    content:'';
+    position:absolute; left:0; top:0; bottom:0; width:4px;
+    background:var(--dorado);
+  }
+  .stat-card .num{
+    font-family:'Georgia',serif;
+    font-size:30px;
+    color:var(--verde);
+    font-weight:bold;
+  }
+  .stat-card .label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--texto-suave);
+    margin-top:2px;
+  }
+
+  /* ===== SECTION HEADER ===== */
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .section-head h2{
+    font-size:20px;
+    color:var(--verde);
+    margin:0;
+  }
+  .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+
+  button{
+    font-family:'Montserrat',sans-serif;
+    cursor:pointer;
+    border:none;
+    border-radius:7px;
+    padding:10px 16px;
+    font-size:13px;
+    font-weight:600;
+    transition:all .15s;
+  }
+  .btn-primary{ background:var(--verde); color:var(--blanco); }
+  .btn-primary:hover{ background:var(--verde-claro); }
+  .btn-gold{ background:var(--dorado); color:var(--verde); }
+  .btn-gold:hover{ background:var(--dorado-suave); }
+  .btn-ghost{ background:transparent; color:var(--verde); border:1px solid var(--borde); }
+  .btn-ghost:hover{ background:var(--crema-osc); }
+  .btn-danger{ background:transparent; color:#a14545; border:1px solid #e2c3c3; }
+  .btn-danger:hover{ background:#fbeeee; }
+  .btn-sm{ padding:6px 10px; font-size:12px; border-radius:6px; }
+
+  /* ===== FILTROS ===== */
+  .filters{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  select, input[type=text], input[type=date]{
+    font-family:'Montserrat',sans-serif;
+    padding:9px 12px;
+    border:1px solid var(--borde);
+    border-radius:7px;
+    font-size:13px;
+    background:var(--blanco);
+    color:var(--texto);
+  }
+  select:focus, input:focus, textarea:focus{ outline:2px solid var(--dorado); outline-offset:1px; }
+
+  /* ===== TABLE ===== */
+  .table-wrap{
+    background:var(--blanco);
+    border:1px solid var(--borde);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:var(--sombra);
+  }
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  thead th{
+    background:var(--verde);
+    color:var(--crema);
+    text-align:left;
+    padding:12px 14px;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    font-weight:600;
+  }
+  tbody td{
+    padding:12px 14px;
+    border-bottom:1px solid var(--crema-osc);
+    vertical-align:top;
+  }
+  tbody tr:hover{ background:var(--crema); }
+  tbody tr:last-child td{ border-bottom:none; }
+  .empty-row td{
+    text-align:center;
+    padding:40px;
+    color:var(--texto-suave);
+    font-style:italic;
+  }
+
+  .badge{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .badge-idea{ background:#EFEAE2; color:#8a8170; }
+  .badge-planificado{ background:#E4ECE8; color:#3E6354; }
+  .badge-porgrabar{ background:#FBE9D7; color:#a8702f; }
+  .badge-grabado{ background:#E1E6F2; color:#3c4f8a; }
+  .badge-edicion{ background:#F0DFE2; color:#9c4a55; }
+  .badge-publicado{ background:#DDEFE0; color:#27704a; }
+  .badge-cancelado{ background:#F3E3E3; color:#a33d3d; }
+
+  .tag{
+    display:inline-block;
+    padding:3px 9px;
+    border-radius:6px;
+    font-size:11px;
+    background:var(--dorado-suave);
+    color:var(--verde);
+    font-weight:600;
+    margin-right:4px;
+  }
+
+  .row-actions{ display:flex; gap:6px; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay{
+    position:fixed; inset:0;
+    background:rgba(45,74,62,0.45);
+    display:none;
+    align-items:center; justify-content:center;
+    z-index:100;
+    padding:20px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal{
+    background:var(--blanco);
+    border-radius:14px;
+    padding:28px 30px;
+    width:100%;
+    max-width:560px;
+    max-height:90vh;
+    overflow-y:auto;
+    box-shadow:0 12px 40px rgba(0,0,0,0.2);
+  }
+  .modal h3{ margin:0 0 18px; color:var(--verde); font-size:19px; }
+  .field{ margin-bottom:14px; }
+  .field label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:var(--texto-suave);
+    margin-bottom:5px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+  }
+  .field input, .field select, .field textarea{
+    width:100%;
+  }
+  .field textarea{ resize:vertical; min-height:60px; font-family:'Montserrat',sans-serif; }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .modal-footer{
+    display:flex; justify-content:flex-end; gap:10px; margin-top:20px;
+    border-top:1px solid var(--crema-osc); padding-top:18px;
+  }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--texto-suave);
+  }
+  .empty-state .mic{ font-size:40px; margin-bottom:10px; }
+
+  /* ===== KANBAN ===== */
+  .kanban{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(220px,1fr));
+    gap:14px;
+    overflow-x:auto;
+  }
+  .kanban-col{
+    background:var(--blanco);
+    border:1px solid var(--borde);
+    border-radius:10px;
+    padding:14px;
+    min-height:200px;
+  }
+  .kanban-col h4{
+    margin:0 0 12px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--texto-suave);
+    display:flex; justify-content:space-between;
+  }
+  .kanban-card{
+    background:var(--crema);
+    border-left:3px solid var(--dorado);
+    border-radius:6px;
+    padding:10px 12px;
+    margin-bottom:10px;
+    font-size:12.5px;
+  }
+  .kanban-card .titulo{ font-weight:700; color:var(--verde); margin-bottom:4px; }
+  .kanban-card .meta{ color:var(--texto-suave); font-size:11px; }
+
+  /* ===== FOOTER NOTE ===== */
+  .footer-note{
+    text-align:center;
+    font-size:11px;
+    color:var(--texto-suave);
+    margin-top:30px;
+  }
+
+  @media(max-width:900px){
+    .field-row{ grid-template-columns:1fr; }
+    .kanban{ grid-template-columns:1fr; }
+    header{ padding:22px 18px; }
+    main{ padding:20px 16px 40px; }
+    .tabs{ padding:0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="mic-icon">🎙️</div>
+    <div>
+      <div class="brand-eyebrow">@cobecbiobio</div>
+      <h1>Bari Talks con COBEC</h1>
+      <p class="sub">Panel de gestión de contenido, comunidad y convenios</p>
+    </div>
+  </div>
+  <div style="text-align:right;">
+    <p class="sub" style="margin:0;" id="sync-status">Conectando con Supabase...</p>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tab active" data-view="resumen">Resumen</div>
+  <div class="tab" data-view="calendario">Calendario de Contenido</div>
+  <div class="tab" data-view="kanban">Vista Kanban</div>
+  <div class="tab" data-view="marcas">Marcas y Convenios</div>
+  <div class="tab" data-view="guia">Guía de Uso</div>
+</nav>
+
+<main>
+
+  <!-- ============ RESUMEN ============ -->
+  <section class="view active" id="view-resumen">
+    <div class="stats-row" id="stats-row"></div>
+
+    <div class="section-head">
+      <h2>Próximos contenidos</h2>
+      <button class="btn-ghost" onclick="switchView('calendario')">Ver calendario completo →</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Fecha</th><th>Tipo</th><th>Tema</th><th>Responsable(s)</th><th>Marca</th><th>Estado</th></tr>
+        </thead>
+        <tbody id="proximos-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ CALENDARIO ============ -->
+  <section class="view" id="view-calendario">
+    <div class="section-head">
+      <h2>Calendario de Contenido</h2>
+      <div class="actions">
+        <button class="btn-primary" onclick="openItemModal()">+ Nuevo contenido</button>
+      </div>
+    </div>
+
+    <div class="filters">
+      <input type="text" id="filtro-texto" placeholder="Buscar por tema o responsable...">
+      <select id="filtro-tipo"><option value="">Todos los tipos</option></select>
+      <select id="filtro-serie"><option value="">Todas las series</option></select>
+      <select id="filtro-estado"><option value="">Todos los estados</option></select>
+      <select id="filtro-marca"><option value="">Todas las marcas</option></select>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th><th>Tipo</th><th>Serie</th><th>Tema</th>
+            <th>Responsable(s)</th><th>Marca</th><th>Plataforma</th><th>Estado</th><th>Drive</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="calendario-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ KANBAN ============ -->
+  <section class="view" id="view-kanban">
+    <div class="section-head">
+      <h2>Flujo de producción</h2>
+      <button class="btn-primary" onclick="openItemModal()">+ Nuevo contenido</button>
+    </div>
+    <div class="kanban" id="kanban-board"></div>
+  </section>
+
+  <!-- ============ MARCAS ============ -->
+  <section class="view" id="view-marcas">
+    <div class="section-head">
+      <h2>Marcas y Convenios</h2>
+      <button class="btn-primary" onclick="openBrandModal()">+ Nueva marca / convenio</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Marca / Empresa</th><th>Tipo de colaboración</th><th>Contacto</th>
+            <th>Estado</th><th>Contraprestación</th><th>Notas</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="marcas-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ GUÍA ============ -->
+  <section class="view" id="view-guia">
+    <div class="section-head"><h2>Guía de uso del panel</h2></div>
+    <div class="table-wrap" style="padding:24px;">
+      <div style="display:grid; gap:18px;">
+        <div><strong style="color:var(--verde);">Resumen</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Vista rápida de cuántos contenidos hay por estado y los próximos 5 a producir, ordenados por fecha.</p></div>
+        <div><strong style="color:var(--verde);">Calendario de Contenido</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Registro completo y editable de cada pieza: podcast, receta, mito bariátrico, charla, evento o historia de paciente. Usa los filtros para encontrar algo rápido.</p></div>
+        <div><strong style="color:var(--verde);">Vista Kanban</strong><p style="color:var(--texto-suave); margin:4px 0 0;">El mismo contenido organizado por etapa de producción: Idea → Planificado → Por grabar → Grabado/En edición → Publicado. Útil para reuniones de equipo.</p></div>
+        <div><strong style="color:var(--verde);">Marcas y Convenios</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Detalle de cada acuerdo comercial (Barifit Chile, ChileSuplementos, etc.): qué se entrega a cambio, estado del convenio y contacto.</p></div>
+        <div><strong style="color:var(--verde);">Organización en Drive</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Sugerencia: una carpeta por mes ("Bari Talks - Julio 2026") con subcarpetas Guiones / Material Bruto / Ediciones Finales / Autorizaciones de Pacientes. Pega el link de cada carpeta en la columna "Drive" del calendario.</p></div>
+        <div><strong style="color:var(--verde);">Conexión a Supabase</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Este panel está conectado a tu proyecto de Supabase. Tú y Macarena pueden estar ambas con el panel abierto al mismo tiempo y ver los cambios en vivo, sin recargar la página. Si ves "Conectando con Supabase..." y no avanza, revisa que el SUPABASE_URL y SUPABASE_ANON_KEY estén bien pegados en el código, y que las tablas existan en tu proyecto.</p></div>
+        <div><strong style="color:var(--verde);">Respaldo de datos</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Usa el botón "Exportar respaldo" para guardar una copia en JSON. Aunque los datos viven en Supabase (no se pierden al cerrar el navegador), es buena práctica respaldar antes de cambios grandes.</p></div>
+      </div>
+      <div style="margin-top:22px; display:flex; gap:10px;">
+        <button class="btn-gold" onclick="exportBackup()">⬇ Exportar respaldo (JSON)</button>
+        <button class="btn-ghost" onclick="document.getElementById('import-file').click()">⬆ Importar respaldo</button>
+        <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importBackup(event)">
+      </div>
+    </div>
+  </section>
+
+  <p class="footer-note">Bari Talks con COBEC · Panel interno de planificación · Conectado a Supabase — datos en vivo entre todos los que tengan el link</p>
+</main>
+
+<!-- ============ MODAL: CONTENIDO ============ -->
+<div class="modal-overlay" id="item-modal-overlay">
+  <div class="modal">
+    <h3 id="item-modal-title">Nuevo contenido</h3>
+    <input type="hidden" id="item-id">
+    <div class="field-row">
+      <div class="field"><label>Fecha</label><input type="date" id="item-fecha"></div>
+      <div class="field"><label>Tipo de contenido</label>
+        <select id="item-tipo">
+          <option>Video / Reel</option>
+          <option>Podcast</option>
+          <option>Receta</option>
+          <option>Mito Bariátrico</option>
+          <option>Charla / Taller</option>
+          <option>Evento</option>
+          <option>Historia Paciente</option>
+          <option>Otro</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Serie / Categoría</label>
+        <select id="item-serie">
+          <option>Bari Talks - Historias Reales</option>
+          <option>Bari Talks - Receta del Episodio</option>
+          <option>Bari Talks - Mitos</option>
+          <option>Bari Talks - Serie Deportiva</option>
+          <option>Comunidad COBEC</option>
+          <option>Convenio Marca</option>
+          <option>Otra</option>
+        </select>
+      </div>
+      <div class="field"><label>Plataforma</label>
+        <select id="item-plataforma">
+          <option>Instagram (Reel)</option>
+          <option>Instagram (Reel corto)</option>
+          <option>Instagram (Feed)</option>
+          <option>Instagram (Video largo)</option>
+          <option>Instagram (Stories)</option>
+          <option>Presencial</option>
+          <option>Presencial + cobertura IG</option>
+          <option>YouTube</option>
+          <option>Otro</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Tema / Título</label><input type="text" id="item-tema" placeholder="Ej: Entrevista paciente — proceso post bypass"></div>
+    <div class="field-row">
+      <div class="field"><label>Responsable(s)</label><input type="text" id="item-resp" placeholder="Ej: Macarena / Fernanda"></div>
+      <div class="field"><label>Marca asociada</label><input type="text" id="item-marca" list="marcas-datalist" placeholder="Ej: Barifit Chile (opcional)"></div>
+    </div>
+    <datalist id="marcas-datalist"></datalist>
+    <div class="field"><label>Estado</label>
+      <select id="item-estado">
+        <option>Idea</option>
+        <option>Planificado</option>
+        <option>Por grabar</option>
+        <option>Grabado</option>
+        <option>En edición</option>
+        <option>Publicado</option>
+        <option>Cancelado</option>
+      </select>
+    </div>
+    <div class="field"><label>Link / Drive</label><input type="text" id="item-link" placeholder="https://drive.google.com/..."></div>
+    <div class="field"><label>Notas</label><textarea id="item-notas" placeholder="Detalles, autorizaciones, pendientes..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeItemModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveItem()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: MARCA ============ -->
+<div class="modal-overlay" id="brand-modal-overlay">
+  <div class="modal">
+    <h3 id="brand-modal-title">Nueva marca / convenio</h3>
+    <input type="hidden" id="brand-id">
+    <div class="field"><label>Marca / Empresa</label><input type="text" id="brand-nombre" placeholder="Ej: Barifit Chile"></div>
+    <div class="field"><label>Tipo de colaboración</label><input type="text" id="brand-tipo" placeholder="Ej: Marca auspiciadora del segmento"></div>
+    <div class="field-row">
+      <div class="field"><label>Contacto</label><input type="text" id="brand-contacto" placeholder="Nombre / teléfono / email"></div>
+      <div class="field"><label>Estado del convenio</label>
+        <select id="brand-estado">
+          <option>En coordinación</option>
+          <option>Activo</option>
+          <option>Pausado</option>
+          <option>Finalizado</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Contraprestación</label><input type="text" id="brand-contraprestacion" placeholder="Ej: Mención + producto en recetas"></div>
+    <div class="field"><label>Notas</label><textarea id="brand-notas" placeholder="Detalles del acuerdo, pendientes de validar..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeBrandModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveBrand()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONEXIÓN A SUPABASE
+   ============================================================
+   1. Reemplaza SUPABASE_URL y SUPABASE_ANON_KEY abajo con los
+      datos de tu proyecto (Project Settings → API en Supabase).
+   2. Asegúrate de haber corrido el script SQL que crea las
+      tablas bari_talks_items y bari_talks_brands.
+   ============================================================ */
+const SUPABASE_URL = "https://cmunzxucsljshnoczneo.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_73-mimGQG8c1pqd4XLAhPg_PCfWVenc";
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function uid(){ return 'id_' + Math.random().toString(36).slice(2,10); }
+
+async function loadData(){
+  const { data, error } = await sb.from('bari_talks_items').select('*').order('fecha', {ascending:true});
+  if(error){ console.error(error); flashSync("Error al cargar contenidos", true); return seedData(); }
+  if(!data || data.length===0){
+    const seed = seedData();
+    for(const it of seed){ await sb.from('bari_talks_items').insert(it); }
+    return seed;
+  }
+  return data;
+}
+async function loadBrands(){
+  const { data, error } = await sb.from('bari_talks_brands').select('*').order('nombre', {ascending:true});
+  if(error){ console.error(error); flashSync("Error al cargar marcas", true); return seedBrands(); }
+  if(!data || data.length===0){
+    const seed = seedBrands();
+    for(const b of seed){ await sb.from('bari_talks_brands').insert(b); }
+    return seed;
+  }
+  return data;
+}
+async function upsertItem(item){
+  const { error } = await sb.from('bari_talks_items').upsert({...item, updated_at: new Date().toISOString()});
+  if(error){ console.error(error); flashSync("Error al guardar", true); return false; }
+  flashSync("Guardado ✓");
+  return true;
+}
+async function removeItem(id){
+  const { error } = await sb.from('bari_talks_items').delete().eq('id', id);
+  if(error){ console.error(error); flashSync("Error al eliminar", true); return false; }
+  flashSync("Eliminado ✓");
+  return true;
+}
+async function upsertBrand(brand){
+  const { error } = await sb.from('bari_talks_brands').upsert({...brand, updated_at: new Date().toISOString()});
+  if(error){ console.error(error); flashSync("Error al guardar", true); return false; }
+  flashSync("Guardado ✓");
+  return true;
+}
+async function removeBrand(id){
+  const { error } = await sb.from('bari_talks_brands').delete().eq('id', id);
+  if(error){ console.error(error); flashSync("Error al eliminar", true); return false; }
+  flashSync("Eliminado ✓");
+  return true;
+}
+function flashSync(msg, isError){
+  const el = document.getElementById('sync-status');
+  if(!el) return;
+  el.textContent = msg;
+  el.style.color = isError ? "#e3b3b3" : "var(--dorado-suave)";
+  clearTimeout(window._syncTimeout);
+  window._syncTimeout = setTimeout(()=>{ el.textContent = "Conectado — datos en vivo"; el.style.color="var(--dorado-suave)"; }, 1800);
+}
+
+function seedData(){
+  return [
+    {id:uid(), fecha:"2026-06-23", tipo:"Video / Reel", serie:"Convenio Marca", tema:"Grabación video con ChileSuplementos — convenio paciente COBEC", responsables:"Macarena / Fernanda", marca:"ChileSuplementos", plataforma:"Instagram (Reel + Feed)", estado:"Por grabar", link:"", notas:"Coordinar fecha con ChileSuplementos y autorización del paciente"},
+    {id:uid(), fecha:"2026-06-25", tipo:"Podcast", serie:"Bari Talks - Historias Reales", tema:"Entrevista paciente: proceso post bypass", responsables:"Macarena / Fernanda", marca:"", plataforma:"Instagram (Video largo)", estado:"Planificado", link:"", notas:"Confirmar consentimiento informado del paciente"},
+    {id:uid(), fecha:"2026-06-27", tipo:"Receta", serie:"Bari Talks - Receta del Episodio", tema:"Smoothie proteico fase líquida", responsables:"Fernanda", marca:"Barifit Chile", plataforma:"Instagram (Reel)", estado:"Planificado", link:"", notas:"Usar producto Barifit en preparación"},
+    {id:uid(), fecha:"2026-07-01", tipo:"Mito Bariátrico", serie:"Bari Talks - Mitos", tema:"¿La proteína engorda?", responsables:"Fernanda", marca:"", plataforma:"Instagram (Reel corto)", estado:"Idea", link:"", notas:"Formato pregunta-respuesta rápida"},
+    {id:uid(), fecha:"2026-07-04", tipo:"Charla / Taller", serie:"Comunidad COBEC", tema:"Taller presencial: Llegando a mi proteína diaria", responsables:"Equipo COBEC", marca:"Barifit Chile", plataforma:"Presencial + cobertura IG", estado:"Idea", link:"", notas:"Definir cupo y lugar"},
+    {id:uid(), fecha:"2026-07-08", tipo:"Mito Bariátrico", serie:"Bari Talks - Mitos", tema:"¿La creatina daña el riñón?", responsables:"Fernanda", marca:"", plataforma:"Instagram (Reel corto)", estado:"Idea", link:"", notas:""},
+    {id:uid(), fecha:"2026-07-11", tipo:"Podcast", serie:"Bari Talks - Historias Reales", tema:"Entrevista paciente: actividad física post cirugía", responsables:"Macarena / Fernanda", marca:"", plataforma:"Instagram (Video largo)", estado:"Idea", link:"", notas:"Conectar con serie deportiva"},
+    {id:uid(), fecha:"2026-07-18", tipo:"Evento", serie:"Comunidad COBEC", tema:"Desafío Proteína 21 días — lanzamiento", responsables:"Equipo COBEC", marca:"Barifit Chile / ChileSuplementos", plataforma:"Instagram + presencial", estado:"Idea", link:"", notas:"Definir mecánica y premios"},
+  ];
+}
+function seedBrands(){
+  return [
+    {id:uid(), nombre:"ChileSuplementos", tipo:"Convenio paciente COBEC", contacto:"", estado:"En coordinación", contraprestacion:"A definir", notas:"Validar términos del convenio con paciente COBEC"},
+    {id:uid(), nombre:"Barifit Chile", tipo:"Marca auspiciadora del segmento", contacto:"", estado:"Activo", contraprestacion:"Mención + producto en recetas", notas:"Auspicio principal de Bari Talks"},
+  ];
+}
+
+let items = [];
+let brands = [];
+
+async function initApp(){
+  items = await loadData();
+  brands = await loadBrands();
+  document.getElementById('sync-status').textContent = "Conectado — datos en vivo";
+  renderAll();
+
+  // Suscripción en tiempo real: si otra persona edita, esta pantalla se actualiza sola
+  sb.channel('bari_talks_items_changes')
+    .on('postgres_changes', {event:'*', schema:'public', table:'bari_talks_items'}, async ()=>{
+      items = await loadData();
+      renderAll();
+    }).subscribe();
+
+  sb.channel('bari_talks_brands_changes')
+    .on('postgres_changes', {event:'*', schema:'public', table:'bari_talks_brands'}, async ()=>{
+      brands = await loadBrands();
+      renderAll();
+    }).subscribe();
+}
+initApp();
+
+/* ============================================================
+   NAVEGACIÓN
+   ============================================================ */
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=> switchView(tab.dataset.view));
+});
+function switchView(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.view===name));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id==='view-'+name));
+  renderAll();
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function badgeClass(estado){
+  const map = {
+    "Idea":"badge-idea", "Planificado":"badge-planificado", "Por grabar":"badge-porgrabar",
+    "Grabado":"badge-grabado", "En edición":"badge-edicion", "Publicado":"badge-publicado", "Cancelado":"badge-cancelado"
+  };
+  return map[estado] || "badge-idea";
+}
+function fmtFecha(iso){
+  if(!iso) return "—";
+  const d = new Date(iso+"T00:00:00");
+  return d.toLocaleDateString('es-CL', {day:'2-digit', month:'short', year:'numeric'});
+}
+function escapeHtml(s){
+  return (s||"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* ============================================================
+   RENDER: RESUMEN
+   ============================================================ */
+function renderResumen(){
+  const counts = {};
+  items.forEach(i=> counts[i.estado] = (counts[i.estado]||0)+1);
+  const total = items.length;
+  const publicados = counts["Publicado"]||0;
+  const enProceso = (counts["Por grabar"]||0) + (counts["Grabado"]||0) + (counts["En edición"]||0);
+  const pendientes = (counts["Idea"]||0) + (counts["Planificado"]||0);
+
+  const stats = [
+    {num: total, label:"Contenidos totales"},
+    {num: pendientes, label:"Por planificar"},
+    {num: enProceso, label:"En producción"},
+    {num: publicados, label:"Publicados"},
+    {num: brands.length, label:"Marcas activas"},
+  ];
+  document.getElementById('stats-row').innerHTML = stats.map(s=>`
+    <div class="stat-card"><div class="num">${s.num}</div><div class="label">${s.label}</div></div>
+  `).join('');
+
+  const proximos = [...items]
+    .filter(i=> i.estado !== "Publicado" && i.estado !== "Cancelado")
+    .sort((a,b)=> new Date(a.fecha) - new Date(b.fecha))
+    .slice(0,6);
+
+  const body = document.getElementById('proximos-body');
+  if(proximos.length===0){
+    body.innerHTML = `<tr class="empty-row"><td colspan="6">No hay contenidos próximos. Agrega uno en "Calendario de Contenido".</td></tr>`;
+  } else {
+    body.innerHTML = proximos.map(i=>`
+      <tr>
+        <td>${fmtFecha(i.fecha)}</td>
+        <td>${escapeHtml(i.tipo)}</td>
+        <td>${escapeHtml(i.tema)}</td>
+        <td>${escapeHtml(i.responsables)}</td>
+        <td>${i.marca? `<span class="tag">${escapeHtml(i.marca)}</span>`:'—'}</td>
+        <td><span class="badge ${badgeClass(i.estado)}">${i.estado}</span></td>
+      </tr>
+    `).join('');
+  }
+}
+
+/* ============================================================
+   RENDER: CALENDARIO
+   ============================================================ */
+function populateFilters(){
+  const tipos = [...new Set(items.map(i=>i.tipo))].sort();
+  const series = [...new Set(items.map(i=>i.serie))].sort();
+  const estados = ["Idea","Planificado","Por grabar","Grabado","En edición","Publicado","Cancelado"];
+  const marcas = [...new Set(items.map(i=>i.marca).filter(Boolean))].sort();
+
+  fillSelect('filtro-tipo', tipos, 'Todos los tipos');
+  fillSelect('filtro-serie', series, 'Todas las series');
+  fillSelect('filtro-estado', estados, 'Todos los estados');
+  fillSelect('filtro-marca', marcas, 'Todas las marcas');
+}
+function fillSelect(id, opts, placeholder){
+  const sel = document.getElementById(id);
+  const current = sel.value;
+  sel.innerHTML = `<option value="">${placeholder}</option>` + opts.map(o=>`<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
+  sel.value = current;
+}
+
+['filtro-texto','filtro-tipo','filtro-serie','filtro-estado','filtro-marca'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', renderCalendario);
+});
+
+function renderCalendario(){
+  const texto = document.getElementById('filtro-texto').value.toLowerCase();
+  const fTipo = document.getElementById('filtro-tipo').value;
+  const fSerie = document.getElementById('filtro-serie').value;
+  const fEstado = document.getElementById('filtro-estado').value;
+  const fMarca = document.getElementById('filtro-marca').value;
+
+  let filtered = [...items].sort((a,b)=> new Date(a.fecha) - new Date(b.fecha));
+  filtered = filtered.filter(i=>{
+    if(fTipo && i.tipo!==fTipo) return false;
+    if(fSerie && i.serie!==fSerie) return false;
+    if(fEstado && i.estado!==fEstado) return false;
+    if(fMarca && i.marca!==fMarca) return false;
+    if(texto && !(i.tema.toLowerCase().includes(texto) || i.responsables.toLowerCase().includes(texto))) return false;
+    return true;
+  });
+
+  const body = document.getElementById('calendario-body');
+  if(filtered.length===0){
+    body.innerHTML = `<tr class="empty-row"><td colspan="10">No se encontraron contenidos con estos filtros.</td></tr>`;
+    return;
+  }
+  body.innerHTML = filtered.map(i=>`
+    <tr>
+      <td>${fmtFecha(i.fecha)}</td>
+      <td>${escapeHtml(i.tipo)}</td>
+      <td>${escapeHtml(i.serie)}</td>
+      <td style="max-width:220px;">${escapeHtml(i.tema)}</td>
+      <td>${escapeHtml(i.responsables)}</td>
+      <td>${i.marca? `<span class="tag">${escapeHtml(i.marca)}</span>`:'—'}</td>
+      <td>${escapeHtml(i.plataforma)}</td>
+      <td><span class="badge ${badgeClass(i.estado)}">${i.estado}</span></td>
+      <td>${i.link? `<a href="${escapeHtml(i.link)}" target="_blank" style="color:var(--verde);">Abrir</a>` : '—'}</td>
+      <td>
+        <div class="row-actions">
+          <button class="btn-ghost btn-sm" onclick="editItem('${i.id}')">Editar</button>
+          <button class="btn-danger btn-sm" onclick="deleteItem('${i.id}')">Eliminar</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* ============================================================
+   RENDER: KANBAN
+   ============================================================ */
+const KANBAN_COLS = ["Idea","Planificado","Por grabar","Grabado","En edición","Publicado"];
+function renderKanban(){
+  const cols = ["Idea","Planificado","Por grabar","Grabado / En edición","Publicado"];
+  const board = document.getElementById('kanban-board');
+  board.innerHTML = cols.map(col=>{
+    let group;
+    if(col === "Grabado / En edición") group = items.filter(i=> i.estado==="Grabado" || i.estado==="En edición");
+    else group = items.filter(i=> i.estado===col);
+    group.sort((a,b)=> new Date(a.fecha)-new Date(b.fecha));
+    return `
+      <div class="kanban-col">
+        <h4>${col} <span>${group.length}</span></h4>
+        ${group.length===0 ? `<div style="color:var(--texto-suave); font-size:12px; font-style:italic;">Sin contenidos</div>` :
+          group.map(i=>`
+            <div class="kanban-card" onclick="editItem('${i.id}')" style="cursor:pointer;">
+              <div class="titulo">${escapeHtml(i.tema)}</div>
+              <div class="meta">${fmtFecha(i.fecha)} · ${escapeHtml(i.tipo)}</div>
+              ${i.marca? `<div class="meta">🤝 ${escapeHtml(i.marca)}</div>`:''}
+            </div>
+          `).join('')
+        }
+      </div>
+    `;
+  }).join('');
+}
+
+/* ============================================================
+   RENDER: MARCAS
+   ============================================================ */
+function renderMarcas(){
+  const body = document.getElementById('marcas-body');
+  if(brands.length===0){
+    body.innerHTML = `<tr class="empty-row"><td colspan="7">Aún no hay marcas registradas.</td></tr>`;
+    return;
+  }
+  body.innerHTML = brands.map(b=>`
+    <tr>
+      <td><strong>${escapeHtml(b.nombre)}</strong></td>
+      <td>${escapeHtml(b.tipo)}</td>
+      <td>${escapeHtml(b.contacto)||'—'}</td>
+      <td><span class="badge ${b.estado==='Activo'?'badge-publicado':b.estado==='En coordinación'?'badge-porgrabar':'badge-idea'}">${escapeHtml(b.estado)}</span></td>
+      <td>${escapeHtml(b.contraprestacion)||'—'}</td>
+      <td style="max-width:220px;">${escapeHtml(b.notas)||'—'}</td>
+      <td>
+        <div class="row-actions">
+          <button class="btn-ghost btn-sm" onclick="editBrand('${b.id}')">Editar</button>
+          <button class="btn-danger btn-sm" onclick="deleteBrand('${b.id}')">Eliminar</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  document.getElementById('marcas-datalist').innerHTML = brands.map(b=>`<option value="${escapeHtml(b.nombre)}">`).join('');
+}
+
+/* ============================================================
+   MODAL: ITEM (CONTENIDO)
+   ============================================================ */
+function openItemModal(){
+  document.getElementById('item-modal-title').textContent = "Nuevo contenido";
+  document.getElementById('item-id').value = "";
+  document.getElementById('item-fecha').value = new Date().toISOString().slice(0,10);
+  document.getElementById('item-tipo').value = "Video / Reel";
+  document.getElementById('item-serie').value = "Bari Talks - Historias Reales";
+  document.getElementById('item-plataforma').value = "Instagram (Reel)";
+  document.getElementById('item-tema').value = "";
+  document.getElementById('item-resp').value = "";
+  document.getElementById('item-marca').value = "";
+  document.getElementById('item-estado').value = "Idea";
+  document.getElementById('item-link').value = "";
+  document.getElementById('item-notas').value = "";
+  document.getElementById('item-modal-overlay').classList.add('open');
+}
+function closeItemModal(){ document.getElementById('item-modal-overlay').classList.remove('open'); }
+function editItem(id){
+  const i = items.find(x=>x.id===id);
+  if(!i) return;
+  document.getElementById('item-modal-title').textContent = "Editar contenido";
+  document.getElementById('item-id').value = i.id;
+  document.getElementById('item-fecha').value = i.fecha;
+  document.getElementById('item-tipo').value = i.tipo;
+  document.getElementById('item-serie').value = i.serie;
+  document.getElementById('item-plataforma').value = i.plataforma;
+  document.getElementById('item-tema').value = i.tema;
+  document.getElementById('item-resp').value = i.responsables;
+  document.getElementById('item-marca').value = i.marca;
+  document.getElementById('item-estado').value = i.estado;
+  document.getElementById('item-link').value = i.link;
+  document.getElementById('item-notas').value = i.notas;
+  document.getElementById('item-modal-overlay').classList.add('open');
+}
+async function saveItem(){
+  const id = document.getElementById('item-id').value;
+  const tema = document.getElementById('item-tema').value.trim();
+  if(!tema){ alert("Por favor ingresa el tema o título del contenido."); return; }
+  const data = {
+    id: id || uid(),
+    fecha: document.getElementById('item-fecha').value,
+    tipo: document.getElementById('item-tipo').value,
+    serie: document.getElementById('item-serie').value,
+    plataforma: document.getElementById('item-plataforma').value,
+    tema: tema,
+    responsables: document.getElementById('item-resp').value.trim(),
+    marca: document.getElementById('item-marca').value.trim(),
+    estado: document.getElementById('item-estado').value,
+    link: document.getElementById('item-link').value.trim(),
+    notas: document.getElementById('item-notas').value.trim(),
+  };
+  const ok = await upsertItem(data);
+  if(ok){
+    const idx = items.findIndex(x=>x.id===data.id);
+    if(idx>=0) items[idx] = data; else items.push(data);
+    closeItemModal();
+    renderAll();
+  }
+}
+async function deleteItem(id){
+  if(!confirm("¿Eliminar este contenido del calendario?")) return;
+  const ok = await removeItem(id);
+  if(ok){
+    items = items.filter(x=>x.id!==id);
+    renderAll();
+  }
+}
+
+/* ============================================================
+   MODAL: MARCA
+   ============================================================ */
+function openBrandModal(){
+  document.getElementById('brand-modal-title').textContent = "Nueva marca / convenio";
+  document.getElementById('brand-id').value = "";
+  document.getElementById('brand-nombre').value = "";
+  document.getElementById('brand-tipo').value = "";
+  document.getElementById('brand-contacto').value = "";
+  document.getElementById('brand-estado').value = "En coordinación";
+  document.getElementById('brand-contraprestacion').value = "";
+  document.getElementById('brand-notas').value = "";
+  document.getElementById('brand-modal-overlay').classList.add('open');
+}
+function closeBrandModal(){ document.getElementById('brand-modal-overlay').classList.remove('open'); }
+function editBrand(id){
+  const b = brands.find(x=>x.id===id);
+  if(!b) return;
+  document.getElementById('brand-modal-title').textContent = "Editar marca / convenio";
+  document.getElementById('brand-id').value = b.id;
+  document.getElementById('brand-nombre').value = b.nombre;
+  document.getElementById('brand-tipo').value = b.tipo;
+  document.getElementById('brand-contacto').value = b.contacto;
+  document.getElementById('brand-estado').value = b.estado;
+  document.getElementById('brand-contraprestacion').value = b.contraprestacion;
+  document.getElementById('brand-notas').value = b.notas;
+  document.getElementById('brand-modal-overlay').classList.add('open');
+}
+async function saveBrand(){
+  const id = document.getElementById('brand-id').value;
+  const nombre = document.getElementById('brand-nombre').value.trim();
+  if(!nombre){ alert("Por favor ingresa el nombre de la marca o empresa."); return; }
+  const data = {
+    id: id || uid(),
+    nombre,
+    tipo: document.getElementById('brand-tipo').value.trim(),
+    contacto: document.getElementById('brand-contacto').value.trim(),
+    estado: document.getElementById('brand-estado').value,
+    contraprestacion: document.getElementById('brand-contraprestacion').value.trim(),
+    notas: document.getElementById('brand-notas').value.trim(),
+  };
+  const ok = await upsertBrand(data);
+  if(ok){
+    const idx = brands.findIndex(x=>x.id===data.id);
+    if(idx>=0) brands[idx] = data; else brands.push(data);
+    closeBrandModal();
+    renderAll();
+  }
+}
+async function deleteBrand(id){
+  if(!confirm("¿Eliminar esta marca / convenio?")) return;
+  const ok = await removeBrand(id);
+  if(ok){
+    brands = brands.filter(x=>x.id!==id);
+    renderAll();
+  }
+}
+
+/* ============================================================
+   RESPALDO (EXPORT / IMPORT)
+   ============================================================ */
+function exportBackup(){
+  const payload = {items, brands, exportedAt: new Date().toISOString()};
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `bari_talks_respaldo_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function importBackup(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      const payload = JSON.parse(ev.target.result);
+      if(payload.items) items = payload.items;
+      if(payload.brands) brands = payload.brands;
+      saveData(); saveBrandsData();
+      renderAll();
+      alert("Respaldo importado correctamente.");
+    }catch(err){
+      alert("No se pudo leer el archivo de respaldo.");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+}
+
+/* ============================================================
+   RENDER ALL
+   ============================================================ */
+function renderAll(){
+  renderResumen();
+  populateFilters();
+  renderCalendario();
+  renderKanban();
+  renderMarcas();
+}
+// El primer render ocurre dentro de initApp() tras conectar con Supabase
+
+// Cerrar modales haciendo click fuera
+document.querySelectorAll('.modal-overlay').forEach(ov=>{
+  ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
