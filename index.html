@@ -607,6 +607,25 @@ function switchView(name){
   renderAll();
 }
 
+function goToFilter(filter){
+  if(filter==='marcas'){
+    switchView('marcas');
+    return;
+  }
+  switchView('calendario');
+  const sel = document.getElementById('filtro-estado');
+  if(filter==='pendientes'){
+    sel.value='Idea';
+  } else if(filter==='produccion'){
+    sel.value='Por grabar';
+  } else if(filter){
+    sel.value=filter;
+  } else {
+    sel.value='';
+  }
+  renderCalendario();
+}
+
 function badgeClass(estado){
   const map = {
     "Idea":"badge-idea", "Planificado":"badge-planificado", "Por grabar":"badge-porgrabar",
@@ -632,14 +651,14 @@ function renderResumen(){
   const pendientes = (counts["Idea"]||0) + (counts["Planificado"]||0);
 
   const stats = [
-    {num: total, label:"Contenidos totales"},
-    {num: pendientes, label:"Por planificar"},
-    {num: enProceso, label:"En producción"},
-    {num: publicados, label:"Publicados"},
-    {num: brands.length, label:"Marcas activas"},
+    {num: total, label:"Contenidos totales", filter:""},
+    {num: pendientes, label:"Por planificar", filter:"pendientes"},
+    {num: enProceso, label:"En producción", filter:"produccion"},
+    {num: publicados, label:"Publicados", filter:"Publicado"},
+    {num: brands.length, label:"Marcas activas", filter:"marcas"},
   ];
   document.getElementById('stats-row').innerHTML = stats.map(s=>`
-    <div class="stat-card"><div class="num">${s.num}</div><div class="label">${s.label}</div></div>
+    <div class="stat-card" onclick="goToFilter('${s.filter}')" style="cursor:pointer;"><div class="num">${s.num}</div><div class="label">${s.label}</div></div>
   `).join('');
 
   const proximos = [...items]
