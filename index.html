@@ -306,6 +306,40 @@ tbody tr:last-child td{border-bottom:none;}
 /* FOOTER */
 .app-footer{text-align:center;font-size:11.5px;color:var(--texto-suave);padding:20px 36px 28px;letter-spacing:0.3px;}
 
+/* LOGIN */
+.login-screen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#1E1B4B 0%,#2D2A5E 40%,#3D3A7E 100%);
+  padding:20px;
+}
+.login-card{
+  background:#fff;border-radius:20px;padding:48px 40px;width:100%;max-width:400px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);text-align:center;
+}
+.login-card img{width:80px;height:80px;border-radius:50%;margin-bottom:16px;object-fit:cover;background:#fff;border:3px solid var(--navy-3);}
+.login-card h2{font-size:24px;color:var(--navy);margin-bottom:4px;}
+.login-card .login-sub{font-size:13px;color:var(--texto-suave);margin-bottom:28px;}
+.login-field{position:relative;margin-bottom:16px;text-align:left;}
+.login-field label{display:block;font-size:11px;font-weight:700;color:var(--texto-suave);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px;}
+.login-field input{
+  width:100%;padding:12px 44px 12px 16px;border:1px solid var(--borde);border-radius:12px;
+  font-size:14px;font-family:'Inter',sans-serif;color:var(--texto);transition:var(--tr);
+}
+.login-field input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(30,27,75,0.1);}
+.login-field .toggle-pass{
+  position:absolute;right:12px;top:32px;background:none;border:none;cursor:pointer;padding:4px;
+}
+.login-field .toggle-pass svg{width:18px;height:18px;stroke:var(--texto-suave);}
+.login-btn{
+  width:100%;padding:13px;border:none;border-radius:12px;font-size:14px;font-weight:700;
+  font-family:'Inter',sans-serif;cursor:pointer;transition:var(--tr);
+  background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;
+  box-shadow:0 4px 14px rgba(30,27,75,0.3);margin-top:4px;
+}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(30,27,75,0.35);}
+.login-error{color:var(--rojo);font-size:12px;font-weight:600;margin-top:12px;display:none;}
+.login-footer{margin-top:24px;font-size:11px;color:var(--texto-suave);}
+
 @media(max-width:900px){
   .app-shell{flex-direction:column;}
   .sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:12px 16px;}
@@ -324,7 +358,25 @@ tbody tr:last-child td{border-bottom:none;}
 </head>
 <body>
 
-<div class="app-shell">
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <img src="logo.png" alt="BariLife">
+    <h2>BariLife COBEC</h2>
+    <p class="login-sub">Panel de contenido &middot; Acceso privado</p>
+    <form onsubmit="handleLogin(event)">
+      <div class="login-field">
+        <label>Contrase&ntilde;a</label>
+        <input type="password" id="login-pass" placeholder="Ingresa tu contrase&ntilde;a" autocomplete="current-password">
+        <button type="button" class="toggle-pass" onclick="togglePass()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+      <button type="submit" class="login-btn">Ingresar</button>
+    </form>
+    <div class="login-error" id="login-error">Contrase&ntilde;a incorrecta</div>
+    <div class="login-footer">BariLife COBEC &copy; 2026</div>
+  </div>
+</div>
+
+<div class="app-shell" id="app-shell" style="display:none;">
 
   <aside class="sidebar">
     <div class="sidebar-brand">
@@ -573,6 +625,31 @@ tbody tr:last-child td{border-bottom:none;}
 </div>
 
 <script>
+const PASS_HASH = "a3f5b8c2d1e9f7a6b4c3d2e1f0a9b8c7";
+function handleLogin(e){
+  e.preventDefault();
+  const val = document.getElementById('login-pass').value;
+  if(val === 'baricobec'){
+    sessionStorage.setItem('barilife_auth','1');
+    showApp();
+  } else {
+    const err = document.getElementById('login-error');
+    err.style.display='block';
+    document.getElementById('login-pass').value='';
+    document.getElementById('login-pass').focus();
+    setTimeout(()=> err.style.display='none', 3000);
+  }
+}
+function togglePass(){
+  const inp = document.getElementById('login-pass');
+  inp.type = inp.type==='password' ? 'text' : 'password';
+}
+function showApp(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app-shell').style.display='flex';
+}
+if(sessionStorage.getItem('barilife_auth')==='1') showApp();
+
 const SUPABASE_URL = "https://cmunzxucsljshnoczneo.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_73-mimGQG8c1pqd4XLAhPg_PCfWVenc";
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
