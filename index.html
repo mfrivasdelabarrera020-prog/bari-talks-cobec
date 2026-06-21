@@ -309,12 +309,16 @@ tbody tr:last-child td{border-bottom:none;}
 /* LOGIN */
 .login-screen{
   min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#1E1B4B 0%,#2D2A5E 40%,#3D3A7E 100%);
-  padding:20px;
+  background:url('studio.jpg') center/cover no-repeat fixed;
+  padding:20px;position:relative;
+}
+.login-screen::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(30,27,75,0.75),rgba(45,42,94,0.65));
 }
 .login-card{
   background:#fff;border-radius:20px;padding:48px 40px;width:100%;max-width:400px;
-  box-shadow:0 20px 60px rgba(0,0,0,0.25);text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);text-align:center;position:relative;z-index:1;
 }
 .login-card img{width:80px;height:80px;border-radius:50%;margin-bottom:16px;object-fit:cover;background:#fff;border:3px solid var(--navy-3);}
 .login-card h2{font-size:24px;color:var(--navy);margin-bottom:4px;}
