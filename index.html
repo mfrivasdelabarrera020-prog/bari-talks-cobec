@@ -247,7 +247,7 @@ tbody tr:last-child td{border-bottom:none;}
 .action-btn svg{width:16px;height:16px;stroke:var(--texto-suave);}
 
 /* QUICK LINKS */
-.quick-links{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px;}
+.quick-links{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:28px;}
 .quick-card{
   background:#fff;border:1px solid var(--borde);border-radius:var(--radius);padding:20px;
   box-shadow:var(--sombra);cursor:pointer;transition:var(--tr);
@@ -261,6 +261,7 @@ tbody tr:last-child td{border-bottom:none;}
 .quick-card-icon.navy{background:#E0E1F5;} .quick-card-icon.navy svg{stroke:var(--navy);}
 .quick-card-icon.salmon{background:var(--salmon-light);} .quick-card-icon.salmon svg{stroke:var(--salmon);}
 .quick-card-icon.gold{background:#FEF3E2;} .quick-card-icon.gold svg{stroke:var(--gold);}
+.quick-card-icon.purple{background:#EDE9F7;} .quick-card-icon.purple svg{stroke:#7C3AED;}
 .quick-card h4{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:4px;}
 .quick-card p{font-size:12px;color:var(--texto-suave);line-height:1.4;margin-bottom:10px;}
 .quick-card .link{font-size:12px;font-weight:600;color:var(--teal);display:flex;align-items:center;gap:4px;}
@@ -313,7 +314,7 @@ tbody tr:last-child td{border-bottom:none;}
   .side-tab{font-size:12px;padding:10px 12px;white-space:nowrap;}
   .stats-row{grid-template-columns:repeat(2,1fr);}
   .banner-row{grid-template-columns:1fr;}
-  .quick-links{grid-template-columns:repeat(2,1fr);}
+  .quick-links{grid-template-columns:repeat(2,1fr)!important;}
   .field-row{grid-template-columns:1fr;}
   .kanban{grid-template-columns:1fr;}
   header{padding:18px 20px;}
@@ -420,6 +421,12 @@ tbody tr:last-child td{border-bottom:none;}
         <p>Lineamientos, tonos y recursos de la marca.</p>
         <div class="link">Ver gu&iacute;a &rarr;</div>
       </div>
+      <div class="quick-card" onclick="switchView('resumen')">
+        <div class="quick-card-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h4>Comunidad</h4>
+        <p>Historias, testimonios y conexiones que inspiran.</p>
+        <div class="link">Ver comunidad &rarr;</div>
+      </div>
     </div>
   </section>
 
@@ -500,7 +507,7 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="field"><label>Tipo de contenido</label>
         <select id="item-tipo">
           <option>Video / Reel</option><option>Podcast</option><option>Receta</option>
-          <option>Mito Bari&aacute;trico</option><option>Charla / Taller</option>
+          <option>Carrusel</option><option>Mito Bari&aacute;trico</option><option>Charla / Taller</option>
           <option>Evento</option><option>Historia Paciente</option><option>Otro</option>
         </select>
       </div>
@@ -681,8 +688,21 @@ function fmtFecha(iso){
 }
 
 function typeClass(tipo){
-  const map = {"Video / Reel":"type-video","Podcast":"type-podcast","Receta":"type-receta","Mito Bariátrico":"type-mito","Charla / Taller":"type-charla","Evento":"type-evento","Historia Paciente":"type-historia"};
+  const map = {"Video / Reel":"type-video","Podcast":"type-podcast","Receta":"type-receta","Mito Bariátrico":"type-mito","Charla / Taller":"type-charla","Evento":"type-evento","Historia Paciente":"type-historia","Carrusel":"type-charla"};
   return map[tipo] || "type-otro";
+}
+function typeIcon(tipo){
+  const icons = {
+    "Video / Reel":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+    "Podcast":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>',
+    "Receta":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg>',
+    "Mito Bariátrico":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    "Charla / Taller":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    "Evento":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/></svg>',
+    "Historia Paciente":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    "Carrusel":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+  };
+  return icons[tipo] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>';
 }
 function statusClass(estado){
   const map = {"Idea":"status-idea","Planificado":"status-planificado","Por grabar":"status-porgrabar","Grabado":"status-grabado","En edición":"status-edicion","Publicado":"status-publicado","Cancelado":"status-cancelado"};
@@ -725,7 +745,7 @@ function renderResumen(){
     body.innerHTML = proximos.map(i=>`
       <tr>
         <td>${fmtFechaCell(i.fecha)}</td>
-        <td><span class="type-badge ${typeClass(i.tipo)}">${escapeHtml(i.tipo)}</span></td>
+        <td><span class="type-badge ${typeClass(i.tipo)}">${typeIcon(i.tipo)}${escapeHtml(i.tipo)}</span></td>
         <td>${escapeHtml(i.tema)}</td>
         <td>${escapeHtml(i.responsables)}</td>
         <td>${i.marca? `<span class="tag">${escapeHtml(i.marca)}</span>`:'—'}</td>
@@ -776,7 +796,7 @@ function renderCalendario(){
   body.innerHTML = filtered.map(i=>`
     <tr>
       <td>${fmtFechaCell(i.fecha)}</td>
-      <td><span class="type-badge ${typeClass(i.tipo)}">${escapeHtml(i.tipo)}</span></td>
+      <td><span class="type-badge ${typeClass(i.tipo)}">${typeIcon(i.tipo)}${escapeHtml(i.tipo)}</span></td>
       <td>${escapeHtml(i.serie)}</td>
       <td style="max-width:220px;">${escapeHtml(i.tema)}</td>
       <td>${escapeHtml(i.responsables)}</td>
