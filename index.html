@@ -235,6 +235,32 @@ tbody tr:last-child td{border-bottom:none;}
 .badge-publicado{background:#DFF3E8;color:var(--verde);}
 .badge-cancelado{background:#FBE3E3;color:var(--rojo);}
 
+/* STATUS LEGEND */
+.status-legend{
+  display:flex;flex-wrap:wrap;gap:10px;padding:14px 18px;
+  background:#fff;border:1px solid var(--borde);border-radius:var(--radius);
+  box-shadow:var(--sombra);margin-bottom:20px;align-items:center;
+}
+.status-legend-title{font-size:11px;font-weight:700;color:var(--texto-suave);text-transform:uppercase;letter-spacing:0.8px;margin-right:6px;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--texto);cursor:pointer;padding:4px 10px;border-radius:8px;transition:var(--tr);}
+.legend-item:hover{background:var(--navy-3);}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.legend-dot.c-idea{background:#8A87A8;}
+.legend-dot.c-planificado{background:#3B82F6;}
+.legend-dot.c-porgrabar{background:var(--gold);}
+.legend-dot.c-grabado{background:#7C3AED;}
+.legend-dot.c-edicion{background:var(--salmon);}
+.legend-dot.c-publicado{background:var(--verde);}
+.legend-dot.c-cancelado{background:var(--rojo);}
+
+/* ESTADO PREVIEW IN MODAL */
+.estado-field{position:relative;}
+.estado-preview{
+  display:inline-flex;align-items:center;gap:6px;margin-top:8px;
+  padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;
+}
+.estado-preview .ep-dot{width:10px;height:10px;border-radius:50%;}
+
 .tag{display:inline-block;padding:4px 10px;border-radius:8px;font-size:11px;background:var(--salmon-light);color:var(--salmon-soft);font-weight:600;}
 .row-actions{display:flex;gap:6px;}
 
@@ -441,6 +467,17 @@ tbody tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
+    <div class="status-legend">
+      <span class="status-legend-title">Estados</span>
+      <div class="legend-item" onclick="goToFilter('Idea')"><span class="legend-dot c-idea"></span>Idea</div>
+      <div class="legend-item" onclick="goToFilter('Planificado')"><span class="legend-dot c-planificado"></span>Planificado</div>
+      <div class="legend-item" onclick="goToFilter('produccion')"><span class="legend-dot c-porgrabar"></span>Por grabar</div>
+      <div class="legend-item" onclick="goToFilter('Grabado')"><span class="legend-dot c-grabado"></span>Grabado</div>
+      <div class="legend-item" onclick="goToFilter('En edici&oacute;n')"><span class="legend-dot c-edicion"></span>En edici&oacute;n</div>
+      <div class="legend-item" onclick="goToFilter('Publicado')"><span class="legend-dot c-publicado"></span>Publicado</div>
+      <div class="legend-item" onclick="goToFilter('Cancelado')"><span class="legend-dot c-cancelado"></span>Cancelado</div>
+    </div>
+
     <div class="section-head">
       <h2>Pr&oacute;ximos contenidos</h2>
       <button class="btn-ghost" onclick="switchView('calendario')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Ver calendario completo &rarr;</button>
@@ -591,11 +628,12 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="field"><label>Marca asociada</label><input type="text" id="item-marca" list="marcas-datalist" placeholder="Ej: Barifit Chile (opcional)"></div>
     </div>
     <datalist id="marcas-datalist"></datalist>
-    <div class="field"><label>Estado</label>
-      <select id="item-estado">
+    <div class="field estado-field"><label>Estado</label>
+      <select id="item-estado" onchange="updateEstadoPreview()">
         <option>Idea</option><option>Planificado</option><option>Por grabar</option>
         <option>Grabado</option><option>En edici&oacute;n</option><option>Publicado</option><option>Cancelado</option>
       </select>
+      <div class="estado-preview" id="estado-preview"><span class="ep-dot"></span><span class="ep-label"></span></div>
     </div>
     <div class="field"><label>Link / Drive</label><input type="text" id="item-link" placeholder="https://drive.google.com/..."></div>
     <div class="field"><label>Notas</label><textarea id="item-notas" placeholder="Detalles, autorizaciones, pendientes..."></textarea></div>
@@ -919,6 +957,16 @@ function renderMarcas(){
   document.getElementById('marcas-datalist').innerHTML = brands.map(b=>`<option value="${escapeHtml(b.nombre)}">`).join('');
 }
 
+function updateEstadoPreview(){
+  const val = document.getElementById('item-estado').value;
+  const colors = {"Idea":{bg:"#EDEBF7",dot:"#8A87A8",txt:"#5D5F9E"},"Planificado":{bg:"#E0E1F5",dot:"#3B82F6",txt:"#1E1B4B"},"Por grabar":{bg:"#FEF3E2",dot:"#E8A33D",txt:"#B07A1E"},"Grabado":{bg:"#EDE9F7",dot:"#7C3AED",txt:"#5B3FA0"},"En edición":{bg:"#F5DDD8",dot:"#E09282",txt:"#C97B6C"},"Publicado":{bg:"#DFF3E8",dot:"#2F8F62",txt:"#1A6B45"},"Cancelado":{bg:"#FBE3E3",dot:"#C75858",txt:"#A03030"}};
+  const c = colors[val] || colors["Idea"];
+  const prev = document.getElementById('estado-preview');
+  prev.style.background = c.bg;
+  prev.style.color = c.txt;
+  prev.querySelector('.ep-dot').style.background = c.dot;
+  prev.querySelector('.ep-label').textContent = val;
+}
 function openItemModal(){
   document.getElementById('item-modal-title').textContent = "Nuevo contenido";
   document.getElementById('item-id').value = "";
@@ -930,6 +978,7 @@ function openItemModal(){
   document.getElementById('item-resp').value = "";
   document.getElementById('item-marca').value = "";
   document.getElementById('item-estado').value = "Idea";
+  updateEstadoPreview();
   document.getElementById('item-link').value = "";
   document.getElementById('item-notas').value = "";
   document.getElementById('item-modal-overlay').classList.add('open');
@@ -947,6 +996,7 @@ function editItem(id){
   document.getElementById('item-resp').value = i.responsables;
   document.getElementById('item-marca').value = i.marca;
   document.getElementById('item-estado').value = i.estado;
+  updateEstadoPreview();
   document.getElementById('item-link').value = i.link;
   document.getElementById('item-notas').value = i.notas;
   document.getElementById('item-modal-overlay').classList.add('open');
