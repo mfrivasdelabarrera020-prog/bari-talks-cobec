@@ -635,7 +635,15 @@ tbody tr:last-child td{border-bottom:none;}
       </select>
       <div class="estado-preview" id="estado-preview"><span class="ep-dot"></span><span class="ep-label"></span></div>
     </div>
-    <div class="field"><label>Link / Drive</label><input type="text" id="item-link" placeholder="https://drive.google.com/..."></div>
+    <div class="field"><label>Link / Drive</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="item-link" placeholder="https://drive.google.com/..." style="flex:1;">
+        <button type="button" class="btn-ghost btn-sm" onclick="openDrive()" style="white-space:nowrap;display:flex;align-items:center;gap:5px;padding:8px 14px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Abrir Drive
+        </button>
+      </div>
+    </div>
     <div class="field"><label>Notas</label><textarea id="item-notas" placeholder="Detalles, autorizaciones, pendientes..."></textarea></div>
     <div class="modal-footer">
       <button class="btn-ghost" onclick="closeItemModal()">Cancelar</button>
@@ -957,6 +965,9 @@ function renderMarcas(){
   document.getElementById('marcas-datalist').innerHTML = brands.map(b=>`<option value="${escapeHtml(b.nombre)}">`).join('');
 }
 
+function openDrive(){
+  window.open('https://drive.google.com/drive/u/0/my-drive','_blank','width=1000,height=700');
+}
 function updateEstadoPreview(){
   const val = document.getElementById('item-estado').value;
   const colors = {"Idea":{bg:"#EDEBF7",dot:"#8A87A8",txt:"#5D5F9E"},"Planificado":{bg:"#E0E1F5",dot:"#3B82F6",txt:"#1E1B4B"},"Por grabar":{bg:"#FEF3E2",dot:"#E8A33D",txt:"#B07A1E"},"Grabado":{bg:"#EDE9F7",dot:"#7C3AED",txt:"#5B3FA0"},"En edición":{bg:"#F5DDD8",dot:"#E09282",txt:"#C97B6C"},"Publicado":{bg:"#DFF3E8",dot:"#2F8F62",txt:"#1A6B45"},"Cancelado":{bg:"#FBE3E3",dot:"#C75858",txt:"#A03030"}};
