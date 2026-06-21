@@ -419,6 +419,7 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="side-tab" data-view="kanban"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="5" height="15" rx="1.5"/></svg>Kanban</div>
       <div class="side-tab" data-view="marcas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>Marcas</div>
       <div class="side-tab" data-view="guia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Gu&iacute;a</div>
+      <div class="side-tab" data-view="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>Info</div>
     </nav>
     <div class="sidebar-podcast">
       <div class="sidebar-podcast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
@@ -581,6 +582,33 @@ tbody tr:last-child td{border-bottom:none;}
         <button class="btn-primary" onclick="exportBackup()">Exportar respaldo</button>
         <button class="btn-ghost" onclick="document.getElementById('import-file').click()">Importar respaldo</button>
         <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importBackup(event)">
+      </div>
+    </div>
+  </section>
+
+  <!-- INFO -->
+  <section class="view" id="view-info">
+    <div class="section-head"><h2>Informaci&oacute;n de acceso</h2></div>
+    <div style="max-width:520px;">
+      <div class="table-wrap" style="padding:28px 32px;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+          <div class="stat-icon salmon" style="width:44px;height:44px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+          <div><div style="font-size:11px;font-weight:700;color:var(--texto-suave);text-transform:uppercase;letter-spacing:0.8px;">Correo electr&oacute;nico</div><div style="font-size:15px;font-weight:600;color:var(--navy);margin-top:2px;">barilifecobec@gmail.com</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px;">
+          <div class="stat-icon gold" style="width:44px;height:44px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div><div style="font-size:11px;font-weight:700;color:var(--texto-suave);text-transform:uppercase;letter-spacing:0.8px;">Contrase&ntilde;a del correo</div><div style="display:flex;align-items:center;gap:8px;margin-top:2px;"><span id="info-email-pass" style="font-size:15px;font-weight:600;color:var(--navy);">••••••••</span><button class="btn-ghost btn-sm" onclick="toggleInfoPass('info-email-pass','BariCobec2026!')">Mostrar</button></div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div class="stat-icon teal" style="width:44px;height:44px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <div><div style="font-size:11px;font-weight:700;color:var(--texto-suave);text-transform:uppercase;letter-spacing:0.8px;">Contrase&ntilde;a del panel</div><div style="display:flex;align-items:center;gap:8px;margin-top:2px;"><span id="info-app-pass" style="font-size:15px;font-weight:600;color:var(--navy);">••••••••</span><button class="btn-ghost btn-sm" onclick="toggleInfoPass('info-app-pass','baricobec')">Mostrar</button></div></div>
+        </div>
+      </div>
+      <div class="table-wrap" style="padding:20px 32px;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div class="stat-icon navy" style="width:44px;height:44px;background:#E0E1F5;"><svg viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+          <div><div style="font-size:11px;font-weight:700;color:var(--texto-suave);text-transform:uppercase;letter-spacing:0.8px;">Google Drive</div><div style="margin-top:2px;"><a href="https://drive.google.com/drive/u/5/home" target="_blank" style="font-size:13px;font-weight:600;color:var(--teal);text-decoration:none;">Abrir Drive de BariLife &rarr;</a></div></div>
+        </div>
       </div>
     </div>
   </section>
@@ -965,6 +993,12 @@ function renderMarcas(){
   document.getElementById('marcas-datalist').innerHTML = brands.map(b=>`<option value="${escapeHtml(b.nombre)}">`).join('');
 }
 
+function toggleInfoPass(id, val){
+  const el = document.getElementById(id);
+  const btn = el.nextElementSibling;
+  if(el.textContent === '••••••••'){ el.textContent = val; btn.textContent = 'Ocultar'; }
+  else { el.textContent = '••••••••'; btn.textContent = 'Mostrar'; }
+}
 function openDrive(){
   window.open('https://drive.google.com/drive/u/5/home','_blank','width=1000,height=700');
 }
