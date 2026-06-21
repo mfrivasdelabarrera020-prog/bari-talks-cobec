@@ -53,19 +53,9 @@
     flex-direction:column;
     flex-shrink:0;
   }
-  .brand-block{
-    display:flex; align-items:center; justify-content:center;
-    padding:8px 8px 24px;
-    border-bottom:1px solid var(--sidebar-borde);
-    margin-bottom:24px;
-  }
-  .brand-logo{
-    width:100%;
-    max-width:180px;
-    background:none;
-    border-radius:0;
-    padding:0;
-    box-shadow:none;
+  .header-logo{
+    height:60px;
+    width:auto;
     object-fit:contain;
   }
 
@@ -264,7 +254,6 @@
   @media(max-width:900px){
     .app-shell{ flex-direction:column; }
     .sidebar{ width:100%; flex-direction:row; overflow-x:auto; padding:14px 16px; }
-    .brand-block{ display:none; }
     .side-nav{ flex-direction:row; gap:2px; }
     .side-tab{ font-size:12px; padding:10px 12px; white-space:nowrap; }
     .side-footer{ display:none; }
@@ -280,10 +269,7 @@
 <div class="app-shell">
 
   <aside class="sidebar">
-    <div class="brand-block">
-      <img src="logo.png" alt="BariLife by COBEC" class="brand-logo">
-    </div>
-    <nav class="side-nav">
+    <nav class="side-nav" style="margin-top:8px;">
       <div class="side-tab active" data-view="resumen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Resumen</div>
       <div class="side-tab" data-view="calendario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>Calendario</div>
       <div class="side-tab" data-view="kanban"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="5" height="15" rx="1.5"/></svg>Kanban</div>
@@ -297,9 +283,12 @@
 
   <div class="main-area">
     <header>
-      <div>
-        <h1>BariLife — Panel de Contenido</h1>
-        <p class="sub">Gestión de podcast, recetas, comunidad y convenios · @cobecbiobio</p>
+      <div style="display:flex; align-items:center; gap:20px;">
+        <img src="logo.png" alt="BariLife by COBEC" class="header-logo">
+        <div>
+          <h1>Panel de Contenido</h1>
+          <p class="sub">Podcast, recetas, comunidad y convenios</p>
+        </div>
       </div>
       <div class="sync-pill"><span class="sync-dot"></span><span id="sync-status">Conectando con Supabase...</span></div>
     </header>
