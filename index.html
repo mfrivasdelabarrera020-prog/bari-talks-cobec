@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -8,260 +8,317 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
-  :root{
-    --navy:#2B2D6E;
-    --navy-2:#3D3F8F;
-    --navy-3:#F5F4FA;
-    --salmon:#E09282;
-    --salmon-soft:#C97B6C;
-    --salmon-light:#F8E4DF;
-    --texto:#2B2D6E;
-    --texto-suave:#8A87A8;
-    --borde:#E8E5F2;
-    --verde-estado:#2F8F62;
-    --rojo-estado:#C75858;
-    --sombra: 0 2px 12px rgba(43,45,110,0.06);
-    --sombra-hover: 0 6px 24px rgba(43,45,110,0.10);
-    --sidebar-bg:linear-gradient(180deg, #2B2D6E 0%, #1E2058 100%);
-    --sidebar-borde:rgba(255,255,255,0.08);
-    --sidebar-texto:rgba(255,255,255,0.75);
-    --sidebar-texto-suave:rgba(255,255,255,0.45);
-    --radius:14px;
-    --transition:all .2s ease;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background:#F9F8FC;
-    font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    color:var(--texto);
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3{
-    font-family:'Playfair Display', Georgia, serif;
-    font-weight:600;
-    letter-spacing:-0.2px;
-  }
+:root{
+  --navy:#1E1B4B;
+  --navy-2:#2D2A5E;
+  --navy-3:#F5F4FA;
+  --salmon:#E09282;
+  --salmon-soft:#C97B6C;
+  --salmon-light:#F8E4DF;
+  --teal:#2A9D8F;
+  --gold:#E8A33D;
+  --texto:#1E1B4B;
+  --texto-suave:#8A87A8;
+  --borde:#E8E5F2;
+  --verde:#2F8F62;
+  --rojo:#C75858;
+  --sombra:0 2px 12px rgba(30,27,75,0.06);
+  --radius:14px;
+  --tr:all .2s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#F4F3F9;font-family:'Inter',-apple-system,sans-serif;color:var(--texto);-webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;}
+.app-shell{display:flex;min-height:100vh;}
 
-  .app-shell{ display:flex; min-height:100vh; }
+/* SIDEBAR */
+.sidebar{
+  width:220px;background:linear-gradient(180deg,#1E1B4B 0%,#151237 100%);
+  padding:0;display:flex;flex-direction:column;flex-shrink:0;
+}
+.sidebar-brand{
+  padding:28px 24px 20px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.sidebar-brand img{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#fff;padding:2px;}
+.sidebar-brand-text{color:#fff;font-family:'Playfair Display',serif;font-size:16px;font-weight:600;line-height:1.2;}
+.sidebar-brand-text span{display:block;font-family:'Inter',sans-serif;font-size:10px;font-weight:500;color:rgba(255,255,255,0.45);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;}
+.side-nav{display:flex;flex-direction:column;gap:2px;padding:20px 12px;flex:1;}
+.side-tab{
+  padding:11px 16px;border-radius:10px;font-size:13px;font-weight:500;
+  color:rgba(255,255,255,0.6);cursor:pointer;transition:var(--tr);
+  display:flex;align-items:center;gap:11px;letter-spacing:0.1px;
+}
+.side-tab svg{width:18px;height:18px;flex-shrink:0;opacity:0.6;}
+.side-tab:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.9);}
+.side-tab:hover svg{opacity:0.9;}
+.side-tab.active{background:linear-gradient(135deg,rgba(42,157,143,0.25),rgba(30,27,75,0.4));color:#fff;font-weight:600;}
+.side-tab.active svg{opacity:1;stroke:#2A9D8F;}
+.sidebar-podcast{
+  margin:0 12px 20px;padding:20px 16px;
+  background:linear-gradient(135deg,#2D2A5E,#1E1B4B);
+  border:1px solid rgba(255,255,255,0.08);border-radius:14px;text-align:center;
+}
+.sidebar-podcast-icon{
+  width:48px;height:48px;margin:0 auto 10px;background:linear-gradient(135deg,var(--gold),#F0B85C);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+}
+.sidebar-podcast-icon svg{width:22px;height:22px;stroke:#1E1B4B;}
+.sidebar-podcast h4{color:#fff;font-family:'Playfair Display',serif;font-size:15px;margin-bottom:4px;}
+.sidebar-podcast p{color:rgba(255,255,255,0.5);font-size:11px;line-height:1.5;margin-bottom:14px;}
+.sidebar-podcast a{
+  display:inline-flex;align-items:center;gap:6px;padding:8px 18px;
+  border:1px solid var(--gold);border-radius:20px;color:var(--gold);
+  font-size:12px;font-weight:600;text-decoration:none;transition:var(--tr);
+}
+.sidebar-podcast a:hover{background:var(--gold);color:#1E1B4B;}
 
-  /* ===== SIDEBAR ===== */
-  .sidebar{
-    width:250px;
-    background:var(--sidebar-bg);
-    padding:28px 18px;
-    display:flex;
-    flex-direction:column;
-    flex-shrink:0;
-  }
-  .header-logo{
-    height:60px;
-    width:auto;
-    object-fit:contain;
-  }
+/* MAIN */
+.main-area{flex:1;min-width:0;display:flex;flex-direction:column;background:#F4F3F9;}
+header{
+  background:#fff;padding:20px 36px;border-bottom:1px solid var(--borde);
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+}
+.header-left{display:flex;align-items:center;gap:18px;}
+.header-logo{height:50px;width:auto;object-fit:contain;}
+.header-titles h1{font-size:22px;color:var(--texto);font-weight:600;}
+.header-titles p{margin:3px 0 0;font-size:12.5px;color:var(--texto-suave);font-family:'Inter',sans-serif;}
+.header-right{display:flex;align-items:center;gap:16px;}
+.sync-pill{
+  font-size:12px;color:var(--navy);display:flex;align-items:center;gap:7px;
+  background:var(--navy-3);padding:7px 16px;border-radius:20px;border:1px solid var(--borde);font-weight:500;
+}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--verde);display:inline-block;}
+.user-pill{
+  display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;
+  background:var(--navy-3);border-radius:24px;border:1px solid var(--borde);
+}
+.user-avatar{
+  width:32px;height:32px;border-radius:50%;background:var(--navy);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;
+}
+.user-info{font-size:12px;line-height:1.3;}
+.user-info strong{display:block;color:var(--texto);font-weight:600;}
+.user-info span{color:var(--texto-suave);font-size:11px;}
 
-  .side-nav{ display:flex; flex-direction:column; gap:4px; flex:1; }
-  .side-tab{
-    padding:12px 16px;
-    border-radius:10px;
-    font-size:13.5px;
-    font-weight:500;
-    color:var(--sidebar-texto);
-    cursor:pointer;
-    transition:var(--transition);
-    display:flex; align-items:center; gap:12px;
-    border-left:3px solid transparent;
-    letter-spacing:0.1px;
-  }
-  .side-tab svg{ width:18px; height:18px; flex-shrink:0; }
-  .side-tab:hover{ background:rgba(255,255,255,0.08); color:#fff; }
-  .side-tab.active{
-    background:rgba(224,146,130,0.15);
-    color:var(--salmon);
-    border-left-color:var(--salmon);
-  }
-  .side-tab.active svg{ opacity:1; }
-  .side-footer{
-    margin-top:20px; padding-top:18px; border-top:1px solid var(--sidebar-borde);
-    font-size:11px; color:var(--sidebar-texto-suave); line-height:1.6;
-    letter-spacing:0.2px;
-  }
+main{padding:28px 36px 40px;max-width:1500px;}
+.view{display:none;}
+.view.active{display:block;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 
-  /* ===== MAIN ===== */
-  .main-area{ flex:1; min-width:0; display:flex; flex-direction:column; background:#F9F8FC; }
+/* STAT CARDS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+.stat-card{
+  background:#fff;border:1px solid var(--borde);border-radius:var(--radius);
+  padding:22px 20px;box-shadow:var(--sombra);cursor:pointer;transition:var(--tr);
+  display:flex;align-items:center;gap:16px;
+}
+.stat-card:hover{box-shadow:0 6px 24px rgba(30,27,75,0.10);transform:translateY(-2px);}
+.stat-icon{
+  width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.stat-icon svg{width:22px;height:22px;}
+.stat-icon.teal{background:#E6F5F3;} .stat-icon.teal svg{stroke:var(--teal);}
+.stat-icon.gold{background:#FEF3E2;} .stat-icon.gold svg{stroke:var(--gold);}
+.stat-icon.salmon{background:var(--salmon-light);} .stat-icon.salmon svg{stroke:var(--salmon);}
+.stat-icon.green{background:#DFF3E8;} .stat-icon.green svg{stroke:var(--verde);}
+.stat-info .num{font-family:'Playfair Display',serif;font-size:30px;color:var(--navy);font-weight:700;line-height:1;}
+.stat-info .label{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--texto-suave);margin-top:4px;font-weight:600;}
+.stat-info .sublabel{font-size:11px;color:var(--texto-suave);margin-top:2px;font-weight:400;}
 
-  header{
-    background:#fff;
-    padding:28px 40px;
-    border-bottom:1px solid var(--borde);
-    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
-  }
-  header h1{ font-size:24px; color:var(--texto); font-weight:600; }
-  header p.sub{ margin:6px 0 0; font-size:13px; color:var(--texto-suave); font-family:'Inter',sans-serif; font-weight:400; }
-  .sync-pill{
-    font-size:12px; color:var(--navy); display:flex; align-items:center; gap:7px;
-    background:var(--navy-3); padding:8px 16px; border-radius:24px; border:1px solid var(--borde);
-    font-weight:500;
-  }
-  .sync-dot{ width:7px;height:7px;border-radius:50%; background:var(--verde-estado); display:inline-block; }
+/* MARCAS + BANNER ROW */
+.banner-row{display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:28px;}
+.marcas-card{
+  background:#fff;border:1px solid var(--borde);border-radius:var(--radius);
+  padding:22px 20px;box-shadow:var(--sombra);cursor:pointer;transition:var(--tr);
+  display:flex;align-items:center;gap:16px;
+}
+.marcas-card:hover{box-shadow:0 6px 24px rgba(30,27,75,0.10);transform:translateY(-2px);}
+.podcast-banner{
+  background:linear-gradient(135deg,#1E1B4B 0%,#2D2A5E 50%,#3D3A7E 100%);
+  border-radius:var(--radius);padding:24px 30px;display:flex;align-items:center;gap:24px;
+  box-shadow:0 4px 20px rgba(30,27,75,0.2);
+}
+.podcast-banner-icon{
+  width:64px;height:64px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0.05));
+  border:1px solid rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;
+}
+.podcast-banner-icon svg{width:28px;height:28px;stroke:var(--gold);}
+.podcast-banner-text h3{color:#fff;font-size:18px;letter-spacing:1px;margin-bottom:4px;}
+.podcast-banner-text p{color:rgba(255,255,255,0.6);font-size:13px;}
+.podcast-banner a{
+  margin-left:auto;padding:10px 24px;border:1px solid rgba(255,255,255,0.3);
+  border-radius:24px;color:#fff;font-size:13px;font-weight:600;text-decoration:none;
+  transition:var(--tr);white-space:nowrap;display:flex;align-items:center;gap:8px;
+}
+.podcast-banner a:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.5);}
 
-  main{ padding:32px 40px 60px; max-width:1500px; }
-  .view{ display:none; }
-  .view.active{ display:block; animation:fade .3s ease; }
-  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+/* SECTION */
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:14px;}
+.section-head h2{font-size:20px;color:var(--navy);}
+.actions{display:flex;gap:10px;flex-wrap:wrap;}
+button{
+  font-family:'Inter',sans-serif;cursor:pointer;border:none;border-radius:10px;
+  padding:10px 18px;font-size:13px;font-weight:600;transition:var(--tr);letter-spacing:0.1px;
+}
+.btn-primary{background:linear-gradient(135deg,var(--salmon),#E8A599);color:#fff;box-shadow:0 2px 8px rgba(224,146,130,0.3);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(224,146,130,0.35);}
+.btn-purple{background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;}
+.btn-purple:hover{transform:translateY(-1px);}
+.btn-ghost{background:#fff;color:var(--navy);border:1px solid var(--borde);}
+.btn-ghost:hover{background:var(--navy-3);}
+.btn-danger{background:#fff;color:var(--rojo);border:1px solid #f0d3d3;}
+.btn-danger:hover{background:#fdf1f1;}
+.btn-sm{padding:7px 12px;font-size:12px;border-radius:8px;}
 
-  /* ===== STAT CARDS ===== */
-  .stats-row{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-    gap:18px;
-    margin-bottom:32px;
-  }
-  .stat-card{
-    background:#fff;
-    border:1px solid var(--borde);
-    border-radius:var(--radius);
-    padding:22px 24px;
-    box-shadow:var(--sombra);
-    position:relative;
-    overflow:hidden;
-    transition:var(--transition);
-  }
-  .stat-card:hover{ box-shadow:var(--sombra-hover); transform:translateY(-1px); }
-  .stat-card::before{
-    content:'';
-    position:absolute; left:0; top:0; bottom:0; width:4px;
-    background:linear-gradient(180deg, var(--salmon), var(--navy));
-    border-radius:0 2px 2px 0;
-  }
-  .stat-card .num{ font-family:'Playfair Display',serif; font-size:32px; color:var(--navy); font-weight:700; line-height:1; }
-  .stat-card .label{ font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--texto-suave); margin-top:6px; font-weight:600; }
+/* FILTERS */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+select,input[type=text],input[type=date]{
+  font-family:'Inter',sans-serif;padding:10px 14px;border:1px solid var(--borde);
+  border-radius:10px;font-size:13px;background:#fff;color:var(--texto);transition:var(--tr);
+}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(42,157,143,0.12);}
+::placeholder{color:var(--texto-suave);opacity:0.6;}
 
-  /* ===== SECTION HEADER ===== */
-  .section-head{
-    display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:20px; flex-wrap:wrap; gap:14px;
-  }
-  .section-head h2{ font-size:20px; color:var(--navy); }
-  .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+/* TABLE */
+.table-wrap{background:#fff;border:1px solid var(--borde);border-radius:var(--radius);overflow:hidden;box-shadow:var(--sombra);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{
+  background:var(--navy-3);color:var(--navy);text-align:left;padding:14px 16px;
+  font-size:10.5px;text-transform:uppercase;letter-spacing:0.8px;font-weight:700;
+}
+tbody td{padding:14px 16px;border-bottom:1px solid var(--navy-3);vertical-align:middle;color:var(--texto);}
+tbody tr{transition:var(--tr);}
+tbody tr:hover{background:var(--navy-3);}
+tbody tr:last-child td{border-bottom:none;}
+.empty-row td{text-align:center;padding:48px;color:var(--texto-suave);font-style:italic;}
 
-  button{
-    font-family:'Inter',sans-serif; cursor:pointer; border:none;
-    border-radius:10px; padding:10px 18px; font-size:13px; font-weight:600;
-    transition:var(--transition);
-    letter-spacing:0.1px;
-  }
-  .btn-primary{ background:linear-gradient(135deg, var(--salmon) 0%, #E8A599 100%); color:#fff; box-shadow:0 2px 8px rgba(224,146,130,0.3); }
-  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 4px 14px rgba(224,146,130,0.35); }
-  .btn-purple{ background:linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%); color:#fff; box-shadow:0 2px 8px rgba(43,45,110,0.2); }
-  .btn-purple:hover{ transform:translateY(-1px); box-shadow:0 4px 14px rgba(43,45,110,0.25); }
-  .btn-ghost{ background:#fff; color:var(--navy); border:1px solid var(--borde); }
-  .btn-ghost:hover{ background:var(--navy-3); border-color:#d4d1e6; }
-  .btn-danger{ background:#fff; color:var(--rojo-estado); border:1px solid #f0d3d3; }
-  .btn-danger:hover{ background:#fdf1f1; }
-  .btn-sm{ padding:7px 12px; font-size:12px; border-radius:8px; }
+/* DATE CELL */
+.date-cell{text-align:center;min-width:50px;}
+.date-cell .day{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--navy);line-height:1;}
+.date-cell .month{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--texto-suave);font-weight:600;}
 
-  /* ===== FILTROS ===== */
-  .filters{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
-  select, input[type=text], input[type=date]{
-    font-family:'Inter',sans-serif; padding:10px 14px; border:1px solid var(--borde);
-    border-radius:10px; font-size:13px; background:#fff; color:var(--texto);
-    transition:var(--transition);
-  }
-  select:focus, input:focus, textarea:focus{ outline:none; border-color:var(--salmon); box-shadow:0 0 0 3px rgba(224,146,130,0.15); }
-  ::placeholder{ color:var(--texto-suave); opacity:0.6; }
+/* TYPE BADGE */
+.type-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;
+  font-size:12px;font-weight:600;white-space:nowrap;
+}
+.type-badge svg{width:14px;height:14px;}
+.type-video{background:#E6F5F3;color:#1A7A6E;}
+.type-podcast{background:#EDE9F7;color:#5B3FA0;}
+.type-receta{background:var(--salmon-light);color:var(--salmon-soft);}
+.type-mito{background:#FEF3E2;color:#B07A1E;}
+.type-charla{background:#E0E1F5;color:var(--navy);}
+.type-evento{background:#DFF3E8;color:var(--verde);}
+.type-historia{background:#F5E6F0;color:#8B4578;}
+.type-otro{background:var(--navy-3);color:var(--texto-suave);}
 
-  /* ===== TABLE ===== */
-  .table-wrap{
-    background:#fff; border:1px solid var(--borde); border-radius:var(--radius);
-    overflow:hidden; box-shadow:var(--sombra);
-  }
-  table{ width:100%; border-collapse:collapse; font-size:13px; }
-  thead th{
-    background:var(--navy-3); color:var(--navy); text-align:left; padding:14px 16px;
-    font-size:11px; text-transform:uppercase; letter-spacing:0.8px; font-weight:700;
-  }
-  tbody td{ padding:14px 16px; border-bottom:1px solid var(--navy-3); vertical-align:top; color:var(--texto); }
-  tbody tr{ transition:var(--transition); }
-  tbody tr:hover{ background:var(--navy-3); }
-  tbody tr:last-child td{ border-bottom:none; }
-  .empty-row td{ text-align:center; padding:48px; color:var(--texto-suave); font-style:italic; }
+/* STATUS DOT */
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;white-space:nowrap;}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.status-idea .status-dot{background:#8A87A8;}
+.status-planificado .status-dot{background:#3B82F6;}
+.status-porgrabar .status-dot{background:var(--gold);}
+.status-grabado .status-dot{background:#7C3AED;}
+.status-edicion .status-dot{background:var(--salmon);}
+.status-publicado .status-dot{background:var(--verde);}
+.status-cancelado .status-dot{background:var(--rojo);}
 
-  .badge{ display:inline-block; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; letter-spacing:0.2px; }
-  .badge-idea{ background:#EDEBF7; color:#5D5F9E; }
-  .badge-planificado{ background:#E0E1F5; color:var(--navy); }
-  .badge-porgrabar{ background:var(--salmon-light); color:var(--salmon-soft); }
-  .badge-grabado{ background:#E0E1F5; color:var(--navy); }
-  .badge-edicion{ background:#F5DDD8; color:var(--salmon-soft); }
-  .badge-publicado{ background:#DFF3E8; color:#2F8F62; }
-  .badge-cancelado{ background:#FBE3E3; color:#C75858; }
+.badge{display:inline-block;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
+.badge-idea{background:#EDEBF7;color:#5D5F9E;}
+.badge-planificado{background:#E0E1F5;color:var(--navy);}
+.badge-porgrabar{background:var(--salmon-light);color:var(--salmon-soft);}
+.badge-grabado{background:#E0E1F5;color:var(--navy);}
+.badge-edicion{background:#F5DDD8;color:var(--salmon-soft);}
+.badge-publicado{background:#DFF3E8;color:var(--verde);}
+.badge-cancelado{background:#FBE3E3;color:var(--rojo);}
 
-  .tag{
-    display:inline-block; padding:4px 10px; border-radius:8px; font-size:11px;
-    background:var(--salmon-light); color:var(--salmon-soft); font-weight:600; margin-right:4px;
-    letter-spacing:0.2px;
-  }
+.tag{display:inline-block;padding:4px 10px;border-radius:8px;font-size:11px;background:var(--salmon-light);color:var(--salmon-soft);font-weight:600;}
+.row-actions{display:flex;gap:6px;}
 
-  .row-actions{ display:flex; gap:6px; }
+/* ACTION MENU */
+.action-btn{
+  width:32px;height:32px;border-radius:8px;background:none;border:1px solid var(--borde);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--tr);padding:0;
+}
+.action-btn:hover{background:var(--navy-3);}
+.action-btn svg{width:16px;height:16px;stroke:var(--texto-suave);}
 
-  /* ===== MODAL ===== */
-  .modal-overlay{
-    position:fixed; inset:0; background:rgba(43,45,110,0.35); backdrop-filter:blur(4px);
-    display:none; align-items:center; justify-content:center; z-index:100; padding:20px;
-  }
-  .modal-overlay.open{ display:flex; }
-  .modal{
-    background:#fff; border:1px solid var(--borde); border-radius:18px;
-    padding:32px 34px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto;
-    box-shadow:0 20px 60px rgba(43,45,110,0.18);
-  }
-  .modal h3{ margin:0 0 22px; color:var(--navy); font-size:20px; }
-  .field{ margin-bottom:16px; }
-  .field label{
-    display:block; font-size:11px; font-weight:700; color:var(--texto-suave);
-    margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px;
-  }
-  .field input, .field select, .field textarea{ width:100%; }
-  .field textarea{ resize:vertical; min-height:70px; font-family:'Inter',sans-serif; padding:10px 14px; border:1px solid var(--borde); border-radius:10px; font-size:13px; color:var(--texto); }
-  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  .modal-footer{
-    display:flex; justify-content:flex-end; gap:10px; margin-top:24px;
-    border-top:1px solid var(--borde); padding-top:20px;
-  }
+/* QUICK LINKS */
+.quick-links{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px;}
+.quick-card{
+  background:#fff;border:1px solid var(--borde);border-radius:var(--radius);padding:20px;
+  box-shadow:var(--sombra);cursor:pointer;transition:var(--tr);
+}
+.quick-card:hover{box-shadow:0 6px 24px rgba(30,27,75,0.10);transform:translateY(-2px);}
+.quick-card-icon{
+  width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;
+}
+.quick-card-icon svg{width:20px;height:20px;}
+.quick-card-icon.teal{background:#E6F5F3;} .quick-card-icon.teal svg{stroke:var(--teal);}
+.quick-card-icon.navy{background:#E0E1F5;} .quick-card-icon.navy svg{stroke:var(--navy);}
+.quick-card-icon.salmon{background:var(--salmon-light);} .quick-card-icon.salmon svg{stroke:var(--salmon);}
+.quick-card-icon.gold{background:#FEF3E2;} .quick-card-icon.gold svg{stroke:var(--gold);}
+.quick-card h4{font-family:'Inter',sans-serif;font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.quick-card p{font-size:12px;color:var(--texto-suave);line-height:1.4;margin-bottom:10px;}
+.quick-card .link{font-size:12px;font-weight:600;color:var(--teal);display:flex;align-items:center;gap:4px;}
 
-  /* ===== KANBAN ===== */
-  .kanban{ display:grid; grid-template-columns:repeat(5,minmax(220px,1fr)); gap:16px; overflow-x:auto; padding-bottom:4px; }
-  .kanban-col{ background:#fff; border:1px solid var(--borde); border-radius:var(--radius); padding:16px; min-height:200px; }
-  .kanban-col h4{
-    margin:0 0 14px; font-size:11px; text-transform:uppercase; letter-spacing:0.8px;
-    color:var(--texto-suave); display:flex; justify-content:space-between; font-weight:700;
-  }
-  .kanban-card{
-    background:var(--navy-3); border-left:3px solid var(--salmon); border-radius:10px;
-    padding:12px 14px; margin-bottom:10px; font-size:12.5px; transition:var(--transition);
-  }
-  .kanban-card:hover{ box-shadow:var(--sombra); transform:translateY(-1px); }
-  .kanban-card .titulo{ font-weight:600; color:var(--navy); margin-bottom:5px; }
-  .kanban-card .meta{ color:var(--texto-suave); font-size:11px; }
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(30,27,75,0.35);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:#fff;border:1px solid var(--borde);border-radius:18px;
+  padding:32px 34px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(30,27,75,0.18);
+}
+.modal h3{margin:0 0 22px;color:var(--navy);font-size:20px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--texto-suave);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px;}
+.field input,.field select,.field textarea{width:100%;}
+.field textarea{resize:vertical;min-height:70px;font-family:'Inter',sans-serif;padding:10px 14px;border:1px solid var(--borde);border-radius:10px;font-size:13px;color:var(--texto);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:24px;border-top:1px solid var(--borde);padding-top:20px;}
 
-  .footer-note{ text-align:center; font-size:11px; color:var(--texto-suave); margin-top:36px; letter-spacing:0.3px; }
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(220px,1fr));gap:16px;overflow-x:auto;}
+.kanban-col{background:#fff;border:1px solid var(--borde);border-radius:var(--radius);padding:16px;min-height:200px;}
+.kanban-col h4{margin:0 0 14px;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:var(--texto-suave);display:flex;justify-content:space-between;font-family:'Inter',sans-serif;font-weight:700;}
+.kanban-card{
+  background:var(--navy-3);border-left:3px solid var(--teal);border-radius:10px;
+  padding:12px 14px;margin-bottom:10px;font-size:12.5px;transition:var(--tr);cursor:pointer;
+}
+.kanban-card:hover{box-shadow:var(--sombra);transform:translateY(-1px);}
+.kanban-card .titulo{font-weight:600;color:var(--navy);margin-bottom:5px;}
+.kanban-card .meta{color:var(--texto-suave);font-size:11px;}
 
-  /* ===== GUIA SECTION ===== */
-  .guia-item{ padding:18px 0; border-bottom:1px solid var(--borde); }
-  .guia-item:last-child{ border-bottom:none; }
-  .guia-item strong{ color:var(--navy); font-size:14px; }
-  .guia-item p{ color:var(--texto-suave); margin:5px 0 0; font-size:13px; line-height:1.6; }
+/* GUIA */
+.guia-item{padding:18px 0;border-bottom:1px solid var(--borde);}
+.guia-item:last-child{border-bottom:none;}
+.guia-item strong{color:var(--navy);font-size:14px;}
+.guia-item p{color:var(--texto-suave);margin:5px 0 0;font-size:13px;line-height:1.6;}
 
-  @media(max-width:900px){
-    .app-shell{ flex-direction:column; }
-    .sidebar{ width:100%; flex-direction:row; overflow-x:auto; padding:14px 16px; }
-    .side-nav{ flex-direction:row; gap:2px; }
-    .side-tab{ font-size:12px; padding:10px 12px; white-space:nowrap; }
-    .side-footer{ display:none; }
-    .field-row{ grid-template-columns:1fr; }
-    .kanban{ grid-template-columns:1fr; }
-    header{ padding:22px 20px; }
-    main{ padding:24px 20px 40px; }
-  }
+/* FOOTER */
+.app-footer{text-align:center;font-size:11.5px;color:var(--texto-suave);padding:20px 36px 28px;letter-spacing:0.3px;}
+
+@media(max-width:900px){
+  .app-shell{flex-direction:column;}
+  .sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:12px 16px;}
+  .sidebar-brand,.sidebar-podcast,.side-footer{display:none;}
+  .side-nav{flex-direction:row;gap:2px;padding:0;}
+  .side-tab{font-size:12px;padding:10px 12px;white-space:nowrap;}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .banner-row{grid-template-columns:1fr;}
+  .quick-links{grid-template-columns:repeat(2,1fr);}
+  .field-row{grid-template-columns:1fr;}
+  .kanban{grid-template-columns:1fr;}
+  header{padding:18px 20px;}
+  main{padding:20px 16px 30px;}
+}
 </style>
 </head>
 <body>
@@ -269,60 +326,109 @@
 <div class="app-shell">
 
   <aside class="sidebar">
-    <nav class="side-nav" style="margin-top:8px;">
+    <div class="sidebar-brand">
+      <img src="logo.png" alt="BariLife">
+      <div class="sidebar-brand-text">BariLife<span>COBEC</span></div>
+    </div>
+    <nav class="side-nav">
       <div class="side-tab active" data-view="resumen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Resumen</div>
-      <div class="side-tab" data-view="calendario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>Calendario</div>
+      <div class="side-tab" data-view="calendario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Calendario</div>
       <div class="side-tab" data-view="kanban"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="5" height="15" rx="1.5"/></svg>Kanban</div>
       <div class="side-tab" data-view="marcas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>Marcas</div>
       <div class="side-tab" data-view="guia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Gu&iacute;a</div>
     </nav>
-    <div class="side-footer">
-      Comunidad bariátrica · Educación, nutrición y movimiento.<br>Tu nueva vida, nuestra comunidad.
+    <div class="sidebar-podcast">
+      <div class="sidebar-podcast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+      <h4>Bari Talks</h4>
+      <p>Conversaciones que informan, inspiran y transforman vidas.</p>
+      <a href="#" onclick="switchView('calendario');return false;">Ir al podcast &rarr;</a>
     </div>
   </aside>
 
   <div class="main-area">
     <header>
-      <div style="display:flex; align-items:center; gap:20px;">
-        <img src="logo.png" alt="BariLife by COBEC" class="header-logo">
-        <div>
+      <div class="header-left">
+        <img src="logo.png" alt="BariLife" class="header-logo">
+        <div class="header-titles">
           <h1>Panel de Contenido</h1>
-          <p class="sub">Podcast, recetas, comunidad y convenios</p>
+          <p>Podcast, recetas, comunidad y convenios</p>
         </div>
       </div>
-      <div class="sync-pill"><span class="sync-dot"></span><span id="sync-status">Conectando con Supabase...</span></div>
+      <div class="header-right">
+        <div class="sync-pill"><span class="sync-dot"></span><span id="sync-status">Conectando con Supabase...</span></div>
+        <div class="user-pill">
+          <div class="user-avatar">F</div>
+          <div class="user-info"><strong>Fernanda</strong><span>Admin</span></div>
+        </div>
+      </div>
     </header>
-
 
 <main>
 
-  <!-- ============ RESUMEN ============ -->
+  <!-- RESUMEN -->
   <section class="view active" id="view-resumen">
     <div class="stats-row" id="stats-row"></div>
 
-    <div class="section-head">
-      <h2>Próximos contenidos</h2>
-      <button class="btn-ghost" onclick="switchView('calendario')">Ver calendario completo →</button>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Fecha</th><th>Tipo</th><th>Tema</th><th>Responsable(s)</th><th>Marca</th><th>Estado</th></tr>
-        </thead>
-        <tbody id="proximos-body"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ============ CALENDARIO ============ -->
-  <section class="view" id="view-calendario">
-    <div class="section-head">
-      <h2>Calendario de Contenido</h2>
-      <div class="actions">
-        <button class="btn-primary" onclick="openItemModal()">+ Nuevo contenido</button>
+    <div class="banner-row">
+      <div class="marcas-card" id="marcas-card" onclick="goToFilter('marcas')">
+        <div class="stat-icon salmon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg></div>
+        <div class="stat-info"><div class="num" id="marcas-num">0</div><div class="label">Marcas activas</div><div class="sublabel">Colaboraciones</div></div>
+      </div>
+      <div class="podcast-banner">
+        <div class="podcast-banner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+        <div class="podcast-banner-text">
+          <h3>BARI TALKS</h3>
+          <p>Conversaciones que informan, inspiran y transforman vidas.</p>
+        </div>
+        <a href="#" onclick="switchView('calendario');return false;">Ver podcast &rarr;</a>
       </div>
     </div>
 
+    <div class="section-head">
+      <h2>Pr&oacute;ximos contenidos</h2>
+      <button class="btn-ghost" onclick="switchView('calendario')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Ver calendario completo &rarr;</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Tema</th><th>Responsable(s)</th><th>Marca</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="proximos-body"></tbody>
+      </table>
+    </div>
+
+    <div class="quick-links">
+      <div class="quick-card" onclick="switchView('calendario')">
+        <div class="quick-card-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <h4>Calendario Editorial</h4>
+        <p>Planifica y visualiza todo tu contenido del mes.</p>
+        <div class="link">Ir al calendario &rarr;</div>
+      </div>
+      <div class="quick-card" onclick="switchView('kanban')">
+        <div class="quick-card-icon navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="5" height="15" rx="1.5"/></svg></div>
+        <h4>Kanban de Producci&oacute;n</h4>
+        <p>Organiza cada etapa de tus contenidos.</p>
+        <div class="link">Ver kanban &rarr;</div>
+      </div>
+      <div class="quick-card" onclick="switchView('marcas')">
+        <div class="quick-card-icon salmon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg></div>
+        <h4>Marcas y Convenios</h4>
+        <p>Gestiona colaboraciones y alianzas activas.</p>
+        <div class="link">Ver marcas &rarr;</div>
+      </div>
+      <div class="quick-card" onclick="switchView('guia')">
+        <div class="quick-card-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+        <h4>Gu&iacute;a de Contenido</h4>
+        <p>Lineamientos, tonos y recursos de la marca.</p>
+        <div class="link">Ver gu&iacute;a &rarr;</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALENDARIO -->
+  <section class="view" id="view-calendario">
+    <div class="section-head">
+      <h2>Calendario de Contenido</h2>
+      <div class="actions"><button class="btn-primary" onclick="openItemModal()">+ Nuevo contenido</button></div>
+    </div>
     <div class="filters">
       <input type="text" id="filtro-texto" placeholder="Buscar por tema o responsable...">
       <select id="filtro-tipo"><option value="">Todos los tipos</option></select>
@@ -330,60 +436,48 @@
       <select id="filtro-estado"><option value="">Todos los estados</option></select>
       <select id="filtro-marca"><option value="">Todas las marcas</option></select>
     </div>
-
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Fecha</th><th>Tipo</th><th>Serie</th><th>Tema</th>
-            <th>Responsable(s)</th><th>Marca</th><th>Plataforma</th><th>Estado</th><th>Drive</th><th></th>
-          </tr>
-        </thead>
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Serie</th><th>Tema</th><th>Responsable(s)</th><th>Marca</th><th>Plataforma</th><th>Estado</th><th>Drive</th><th></th></tr></thead>
         <tbody id="calendario-body"></tbody>
       </table>
     </div>
   </section>
 
-  <!-- ============ KANBAN ============ -->
+  <!-- KANBAN -->
   <section class="view" id="view-kanban">
     <div class="section-head">
-      <h2>Flujo de producción</h2>
+      <h2>Flujo de producci&oacute;n</h2>
       <button class="btn-primary" onclick="openItemModal()">+ Nuevo contenido</button>
     </div>
     <div class="kanban" id="kanban-board"></div>
   </section>
 
-  <!-- ============ MARCAS ============ -->
+  <!-- MARCAS -->
   <section class="view" id="view-marcas">
     <div class="section-head">
       <h2>Marcas y Convenios</h2>
-      <button class="btn-primary" onclick="openBrandModal()">+ Nueva marca / convenio</button>
+      <button class="btn-primary" onclick="openBrandModal()">+ Nueva marca</button>
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Marca / Empresa</th><th>Tipo de colaboración</th><th>Contacto</th>
-            <th>Estado</th><th>Contraprestación</th><th>Notas</th><th></th>
-          </tr>
-        </thead>
+        <thead><tr><th>Marca / Empresa</th><th>Tipo de colaboraci&oacute;n</th><th>Contacto</th><th>Estado</th><th>Contraprestaci&oacute;n</th><th>Notas</th><th></th></tr></thead>
         <tbody id="marcas-body"></tbody>
       </table>
     </div>
   </section>
 
-  <!-- ============ GUÍA ============ -->
+  <!-- GUIA -->
   <section class="view" id="view-guia">
-    <div class="section-head"><h2>Guía de uso del panel</h2></div>
+    <div class="section-head"><h2>Gu&iacute;a de uso del panel</h2></div>
     <div class="table-wrap" style="padding:28px 32px;">
-      <div class="guia-item"><strong>Resumen</strong><p>Vista rapida de cuantos contenidos hay por estado y los proximos a producir, ordenados por fecha.</p></div>
-      <div class="guia-item"><strong>Calendario de Contenido</strong><p>Registro completo y editable de cada pieza: podcast, receta, mito bariatrico, charla, evento o historia de paciente. Usa los filtros para encontrar algo rapido.</p></div>
-      <div class="guia-item"><strong>Vista Kanban</strong><p>El mismo contenido organizado por etapa de produccion: Idea, Planificado, Por grabar, Grabado/En edicion, Publicado. Util para reuniones de equipo.</p></div>
-      <div class="guia-item"><strong>Marcas y Convenios</strong><p>Detalle de cada acuerdo comercial (Barifit Chile, ChileSuplementos, etc.): que se entrega a cambio, estado del convenio y contacto.</p></div>
-      <div class="guia-item"><strong>Organizacion en Drive</strong><p>Sugerencia: una carpeta por mes con subcarpetas Guiones / Material Bruto / Ediciones Finales / Autorizaciones de Pacientes. Pega el link de cada carpeta en la columna "Drive" del calendario.</p></div>
-      <div class="guia-item"><strong>Conexion a Supabase</strong><p>Este panel esta conectado a tu proyecto de Supabase. Tu y Macarena pueden estar ambas con el panel abierto al mismo tiempo y ver los cambios en vivo, sin recargar la pagina.</p></div>
-      <div class="guia-item"><strong>Respaldo de datos</strong><p>Usa el boton "Exportar respaldo" para guardar una copia en JSON. Aunque los datos viven en Supabase, es buena practica respaldar antes de cambios grandes.</p></div>
-      <div style="margin-top:24px; display:flex; gap:12px;">
+      <div class="guia-item"><strong>Resumen</strong><p>Vista rapida de cuantos contenidos hay por estado y los proximos a producir.</p></div>
+      <div class="guia-item"><strong>Calendario de Contenido</strong><p>Registro completo y editable de cada pieza. Usa los filtros para encontrar algo rapido.</p></div>
+      <div class="guia-item"><strong>Vista Kanban</strong><p>Contenido organizado por etapa de produccion. Util para reuniones de equipo.</p></div>
+      <div class="guia-item"><strong>Marcas y Convenios</strong><p>Detalle de cada acuerdo comercial: que se entrega a cambio, estado del convenio y contacto.</p></div>
+      <div class="guia-item"><strong>Conexion a Supabase</strong><p>Panel conectado en vivo. Tu y Macarena pueden ver los cambios en tiempo real sin recargar.</p></div>
+      <div class="guia-item"><strong>Respaldo de datos</strong><p>Exporta una copia en JSON antes de cambios grandes. Los datos viven en Supabase.</p></div>
+      <div style="margin-top:24px;display:flex;gap:12px;">
         <button class="btn-primary" onclick="exportBackup()">Exportar respaldo</button>
         <button class="btn-ghost" onclick="document.getElementById('import-file').click()">Importar respaldo</button>
         <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importBackup(event)">
@@ -391,12 +485,12 @@
     </div>
   </section>
 
-  <p class="footer-note">BariLife by COBEC · Panel interno de planificación · Conectado a Supabase — datos en vivo entre todos los que tengan el link</p>
 </main>
+    <div class="app-footer">BariLife COBEC &copy; 2026 &middot; Todos los derechos reservados</div>
   </div>
 </div>
 
-<!-- ============ MODAL: CONTENIDO ============ -->
+<!-- MODAL: CONTENIDO -->
 <div class="modal-overlay" id="item-modal-overlay">
   <div class="modal">
     <h3 id="item-modal-title">Nuevo contenido</h3>
@@ -405,44 +499,30 @@
       <div class="field"><label>Fecha</label><input type="date" id="item-fecha"></div>
       <div class="field"><label>Tipo de contenido</label>
         <select id="item-tipo">
-          <option>Video / Reel</option>
-          <option>Podcast</option>
-          <option>Receta</option>
-          <option>Mito Bariátrico</option>
-          <option>Charla / Taller</option>
-          <option>Evento</option>
-          <option>Historia Paciente</option>
-          <option>Otro</option>
+          <option>Video / Reel</option><option>Podcast</option><option>Receta</option>
+          <option>Mito Bari&aacute;trico</option><option>Charla / Taller</option>
+          <option>Evento</option><option>Historia Paciente</option><option>Otro</option>
         </select>
       </div>
     </div>
     <div class="field-row">
-      <div class="field"><label>Serie / Categoría</label>
+      <div class="field"><label>Serie / Categor&iacute;a</label>
         <select id="item-serie">
-          <option>Bari Talks - Historias Reales</option>
-          <option>Bari Talks - Receta del Episodio</option>
-          <option>Bari Talks - Mitos</option>
-          <option>Bari Talks - Serie Deportiva</option>
-          <option>Comunidad COBEC</option>
-          <option>Convenio Marca</option>
-          <option>Otra</option>
+          <option>Bari Talks - Historias Reales</option><option>Bari Talks - Receta del Episodio</option>
+          <option>Bari Talks - Mitos</option><option>Bari Talks - Serie Deportiva</option>
+          <option>Comunidad COBEC</option><option>Convenio Marca</option><option>Otra</option>
         </select>
       </div>
       <div class="field"><label>Plataforma</label>
         <select id="item-plataforma">
-          <option>Instagram (Reel)</option>
-          <option>Instagram (Reel corto)</option>
-          <option>Instagram (Feed)</option>
-          <option>Instagram (Video largo)</option>
-          <option>Instagram (Stories)</option>
-          <option>Presencial</option>
-          <option>Presencial + cobertura IG</option>
-          <option>YouTube</option>
-          <option>Otro</option>
+          <option>Instagram (Reel)</option><option>Instagram (Reel corto)</option>
+          <option>Instagram (Feed)</option><option>Instagram (Video largo)</option>
+          <option>Instagram (Stories)</option><option>Presencial</option>
+          <option>Presencial + cobertura IG</option><option>YouTube</option><option>Otro</option>
         </select>
       </div>
     </div>
-    <div class="field"><label>Tema / Título</label><input type="text" id="item-tema" placeholder="Ej: Entrevista paciente — proceso post bypass"></div>
+    <div class="field"><label>Tema / T&iacute;tulo</label><input type="text" id="item-tema" placeholder="Ej: Entrevista paciente — proceso post bypass"></div>
     <div class="field-row">
       <div class="field"><label>Responsable(s)</label><input type="text" id="item-resp" placeholder="Ej: Macarena / Fernanda"></div>
       <div class="field"><label>Marca asociada</label><input type="text" id="item-marca" list="marcas-datalist" placeholder="Ej: Barifit Chile (opcional)"></div>
@@ -450,13 +530,8 @@
     <datalist id="marcas-datalist"></datalist>
     <div class="field"><label>Estado</label>
       <select id="item-estado">
-        <option>Idea</option>
-        <option>Planificado</option>
-        <option>Por grabar</option>
-        <option>Grabado</option>
-        <option>En edición</option>
-        <option>Publicado</option>
-        <option>Cancelado</option>
+        <option>Idea</option><option>Planificado</option><option>Por grabar</option>
+        <option>Grabado</option><option>En edici&oacute;n</option><option>Publicado</option><option>Cancelado</option>
       </select>
     </div>
     <div class="field"><label>Link / Drive</label><input type="text" id="item-link" placeholder="https://drive.google.com/..."></div>
@@ -468,26 +543,21 @@
   </div>
 </div>
 
-<!-- ============ MODAL: MARCA ============ -->
+<!-- MODAL: MARCA -->
 <div class="modal-overlay" id="brand-modal-overlay">
   <div class="modal">
     <h3 id="brand-modal-title">Nueva marca / convenio</h3>
     <input type="hidden" id="brand-id">
     <div class="field"><label>Marca / Empresa</label><input type="text" id="brand-nombre" placeholder="Ej: Barifit Chile"></div>
-    <div class="field"><label>Tipo de colaboración</label><input type="text" id="brand-tipo" placeholder="Ej: Marca auspiciadora del segmento"></div>
+    <div class="field"><label>Tipo de colaboraci&oacute;n</label><input type="text" id="brand-tipo" placeholder="Ej: Marca auspiciadora del segmento"></div>
     <div class="field-row">
-      <div class="field"><label>Contacto</label><input type="text" id="brand-contacto" placeholder="Nombre / teléfono / email"></div>
+      <div class="field"><label>Contacto</label><input type="text" id="brand-contacto" placeholder="Nombre / tel / email"></div>
       <div class="field"><label>Estado del convenio</label>
-        <select id="brand-estado">
-          <option>En coordinación</option>
-          <option>Activo</option>
-          <option>Pausado</option>
-          <option>Finalizado</option>
-        </select>
+        <select id="brand-estado"><option>En coordinaci&oacute;n</option><option>Activo</option><option>Pausado</option><option>Finalizado</option></select>
       </div>
     </div>
-    <div class="field"><label>Contraprestación</label><input type="text" id="brand-contraprestacion" placeholder="Ej: Mención + producto en recetas"></div>
-    <div class="field"><label>Notas</label><textarea id="brand-notas" placeholder="Detalles del acuerdo, pendientes de validar..."></textarea></div>
+    <div class="field"><label>Contraprestaci&oacute;n</label><input type="text" id="brand-contraprestacion" placeholder="Ej: Menci&oacute;n + producto en recetas"></div>
+    <div class="field"><label>Notas</label><textarea id="brand-notas" placeholder="Detalles del acuerdo..."></textarea></div>
     <div class="modal-footer">
       <button class="btn-ghost" onclick="closeBrandModal()">Cancelar</button>
       <button class="btn-primary" onclick="saveBrand()">Guardar</button>
@@ -498,7 +568,6 @@
 <script>
 const SUPABASE_URL = "https://cmunzxucsljshnoczneo.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_73-mimGQG8c1pqd4XLAhPg_PCfWVenc";
-
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function uid(){ return 'id_' + Math.random().toString(36).slice(2,10); }
@@ -506,72 +575,60 @@ function uid(){ return 'id_' + Math.random().toString(36).slice(2,10); }
 async function loadData(){
   const { data, error } = await sb.from('bari_talks_items').select('*').order('fecha', {ascending:true});
   if(error){ console.error(error); flashSync("Error al cargar contenidos", true); return seedData(); }
-  if(!data || data.length===0){
-    const seed = seedData();
-    for(const it of seed){ await sb.from('bari_talks_items').insert(it); }
-    return seed;
-  }
+  if(!data || data.length===0){ const seed = seedData(); for(const it of seed){ await sb.from('bari_talks_items').insert(it); } return seed; }
   return data;
 }
 async function loadBrands(){
   const { data, error } = await sb.from('bari_talks_brands').select('*').order('nombre', {ascending:true});
   if(error){ console.error(error); flashSync("Error al cargar marcas", true); return seedBrands(); }
-  if(!data || data.length===0){
-    const seed = seedBrands();
-    for(const b of seed){ await sb.from('bari_talks_brands').insert(b); }
-    return seed;
-  }
+  if(!data || data.length===0){ const seed = seedBrands(); for(const b of seed){ await sb.from('bari_talks_brands').insert(b); } return seed; }
   return data;
 }
 async function upsertItem(item){
   const { error } = await sb.from('bari_talks_items').upsert({...item, updated_at: new Date().toISOString()});
   if(error){ console.error(error); flashSync("Error al guardar", true); return false; }
-  flashSync("Guardado ✓");
-  return true;
+  flashSync("Guardado"); return true;
 }
 async function removeItem(id){
   const { error } = await sb.from('bari_talks_items').delete().eq('id', id);
   if(error){ console.error(error); flashSync("Error al eliminar", true); return false; }
-  flashSync("Eliminado ✓");
-  return true;
+  flashSync("Eliminado"); return true;
 }
 async function upsertBrand(brand){
   const { error } = await sb.from('bari_talks_brands').upsert({...brand, updated_at: new Date().toISOString()});
   if(error){ console.error(error); flashSync("Error al guardar", true); return false; }
-  flashSync("Guardado ✓");
-  return true;
+  flashSync("Guardado"); return true;
 }
 async function removeBrand(id){
   const { error } = await sb.from('bari_talks_brands').delete().eq('id', id);
   if(error){ console.error(error); flashSync("Error al eliminar", true); return false; }
-  flashSync("Eliminado ✓");
-  return true;
+  flashSync("Eliminado"); return true;
 }
 function flashSync(msg, isError){
   const el = document.getElementById('sync-status');
   if(!el) return;
   el.textContent = msg;
-  el.style.color = isError ? "#e3b3b3" : "var(--navy)";
+  el.style.color = isError ? "#C75858" : "var(--verde)";
   clearTimeout(window._syncTimeout);
   window._syncTimeout = setTimeout(()=>{ el.textContent = "Conectado — datos en vivo"; el.style.color="var(--navy)"; }, 1800);
 }
 
 function seedData(){
   return [
-    {id:uid(), fecha:"2026-06-23", tipo:"Video / Reel", serie:"Convenio Marca", tema:"Grabación video con ChileSuplementos — convenio paciente COBEC", responsables:"Macarena / Fernanda", marca:"ChileSuplementos", plataforma:"Instagram (Reel + Feed)", estado:"Por grabar", link:"", notas:"Coordinar fecha con ChileSuplementos y autorización del paciente"},
-    {id:uid(), fecha:"2026-06-25", tipo:"Podcast", serie:"Bari Talks - Historias Reales", tema:"Entrevista paciente: proceso post bypass", responsables:"Macarena / Fernanda", marca:"", plataforma:"Instagram (Video largo)", estado:"Planificado", link:"", notas:"Confirmar consentimiento informado del paciente"},
-    {id:uid(), fecha:"2026-06-27", tipo:"Receta", serie:"Bari Talks - Receta del Episodio", tema:"Smoothie proteico fase líquida", responsables:"Fernanda", marca:"Barifit Chile", plataforma:"Instagram (Reel)", estado:"Planificado", link:"", notas:"Usar producto Barifit en preparación"},
-    {id:uid(), fecha:"2026-07-01", tipo:"Mito Bariátrico", serie:"Bari Talks - Mitos", tema:"¿La proteína engorda?", responsables:"Fernanda", marca:"", plataforma:"Instagram (Reel corto)", estado:"Idea", link:"", notas:"Formato pregunta-respuesta rápida"},
-    {id:uid(), fecha:"2026-07-04", tipo:"Charla / Taller", serie:"Comunidad COBEC", tema:"Taller presencial: Llegando a mi proteína diaria", responsables:"Equipo COBEC", marca:"Barifit Chile", plataforma:"Presencial + cobertura IG", estado:"Idea", link:"", notas:"Definir cupo y lugar"},
+    {id:uid(), fecha:"2026-06-23", tipo:"Video / Reel", serie:"Convenio Marca", tema:"Grabación video con ChileSuplementos — convenio paciente COBEC", responsables:"Macarena / Fernanda", marca:"ChileSuplementos", plataforma:"Instagram (Reel + Feed)", estado:"Por grabar", link:"", notas:""},
+    {id:uid(), fecha:"2026-06-25", tipo:"Podcast", serie:"Bari Talks - Historias Reales", tema:"Entrevista paciente: proceso post bypass", responsables:"Macarena / Fernanda", marca:"", plataforma:"Instagram (Video largo)", estado:"Planificado", link:"", notas:""},
+    {id:uid(), fecha:"2026-06-27", tipo:"Receta", serie:"Bari Talks - Receta del Episodio", tema:"Smoothie proteico fase líquida", responsables:"Fernanda", marca:"Barifit Chile", plataforma:"Instagram (Reel)", estado:"Planificado", link:"", notas:""},
+    {id:uid(), fecha:"2026-07-01", tipo:"Mito Bariátrico", serie:"Bari Talks - Mitos", tema:"¿La proteína engorda?", responsables:"Fernanda", marca:"", plataforma:"Instagram (Reel corto)", estado:"Idea", link:"", notas:""},
+    {id:uid(), fecha:"2026-07-04", tipo:"Charla / Taller", serie:"Comunidad COBEC", tema:"Taller presencial: Llegando a mi proteína diaria", responsables:"Equipo COBEC", marca:"Barifit Chile", plataforma:"Presencial + cobertura IG", estado:"Idea", link:"", notas:""},
     {id:uid(), fecha:"2026-07-08", tipo:"Mito Bariátrico", serie:"Bari Talks - Mitos", tema:"¿La creatina daña el riñón?", responsables:"Fernanda", marca:"", plataforma:"Instagram (Reel corto)", estado:"Idea", link:"", notas:""},
-    {id:uid(), fecha:"2026-07-11", tipo:"Podcast", serie:"Bari Talks - Historias Reales", tema:"Entrevista paciente: actividad física post cirugía", responsables:"Macarena / Fernanda", marca:"", plataforma:"Instagram (Video largo)", estado:"Idea", link:"", notas:"Conectar con serie deportiva"},
-    {id:uid(), fecha:"2026-07-18", tipo:"Evento", serie:"Comunidad COBEC", tema:"Desafío Proteína 21 días — lanzamiento", responsables:"Equipo COBEC", marca:"Barifit Chile / ChileSuplementos", plataforma:"Instagram + presencial", estado:"Idea", link:"", notas:"Definir mecánica y premios"},
+    {id:uid(), fecha:"2026-07-11", tipo:"Podcast", serie:"Bari Talks - Historias Reales", tema:"Entrevista paciente: actividad física post cirugía", responsables:"Macarena / Fernanda", marca:"", plataforma:"Instagram (Video largo)", estado:"Idea", link:"", notas:""},
+    {id:uid(), fecha:"2026-07-18", tipo:"Evento", serie:"Comunidad COBEC", tema:"Desafío Proteína 21 días — lanzamiento", responsables:"Equipo COBEC", marca:"Barifit Chile / ChileSuplementos", plataforma:"Instagram + presencial", estado:"Idea", link:"", notas:""},
   ];
 }
 function seedBrands(){
   return [
-    {id:uid(), nombre:"ChileSuplementos", tipo:"Convenio paciente COBEC", contacto:"", estado:"En coordinación", contraprestacion:"A definir", notas:"Validar términos del convenio con paciente COBEC"},
-    {id:uid(), nombre:"Barifit Chile", tipo:"Marca auspiciadora del segmento", contacto:"", estado:"Activo", contraprestacion:"Mención + producto en recetas", notas:"Auspicio principal de Bari Talks"},
+    {id:uid(), nombre:"ChileSuplementos", tipo:"Convenio paciente COBEC", contacto:"", estado:"En coordinación", contraprestacion:"A definir", notas:""},
+    {id:uid(), nombre:"Barifit Chile", tipo:"Marca auspiciadora del segmento", contacto:"", estado:"Activo", contraprestacion:"Mención + producto en recetas", notas:""},
   ];
 }
 
@@ -583,18 +640,8 @@ async function initApp(){
   brands = await loadBrands();
   document.getElementById('sync-status').textContent = "Conectado — datos en vivo";
   renderAll();
-
-  sb.channel('bari_talks_items_changes')
-    .on('postgres_changes', {event:'*', schema:'public', table:'bari_talks_items'}, async ()=>{
-      items = await loadData();
-      renderAll();
-    }).subscribe();
-
-  sb.channel('bari_talks_brands_changes')
-    .on('postgres_changes', {event:'*', schema:'public', table:'bari_talks_brands'}, async ()=>{
-      brands = await loadBrands();
-      renderAll();
-    }).subscribe();
+  sb.channel('bari_talks_items_changes').on('postgres_changes', {event:'*', schema:'public', table:'bari_talks_items'}, async ()=>{ items = await loadData(); renderAll(); }).subscribe();
+  sb.channel('bari_talks_brands_changes').on('postgres_changes', {event:'*', schema:'public', table:'bari_talks_brands'}, async ()=>{ brands = await loadBrands(); renderAll(); }).subscribe();
 }
 initApp();
 
@@ -606,40 +653,44 @@ function switchView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id==='view-'+name));
   renderAll();
 }
-
 function goToFilter(filter){
-  if(filter==='marcas'){
-    switchView('marcas');
-    return;
-  }
+  if(filter==='marcas'){ switchView('marcas'); return; }
   switchView('calendario');
   const sel = document.getElementById('filtro-estado');
-  if(filter==='pendientes'){
-    sel.value='Idea';
-  } else if(filter==='produccion'){
-    sel.value='Por grabar';
-  } else if(filter){
-    sel.value=filter;
-  } else {
-    sel.value='';
-  }
+  if(filter==='pendientes') sel.value='Idea';
+  else if(filter==='produccion') sel.value='Por grabar';
+  else if(filter) sel.value=filter;
+  else sel.value='';
   renderCalendario();
 }
 
-function badgeClass(estado){
-  const map = {
-    "Idea":"badge-idea", "Planificado":"badge-planificado", "Por grabar":"badge-porgrabar",
-    "Grabado":"badge-grabado", "En edición":"badge-edicion", "Publicado":"badge-publicado", "Cancelado":"badge-cancelado"
-  };
-  return map[estado] || "badge-idea";
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+function fmtFechaCell(iso){
+  if(!iso) return '<div class="date-cell"><span class="day">--</span></div>';
+  const d = new Date(iso+"T00:00:00");
+  const day = String(d.getDate()).padStart(2,'0');
+  const mon = d.toLocaleDateString('es-CL',{month:'short'}).toUpperCase();
+  const yr = d.getFullYear();
+  return `<div class="date-cell"><div class="day">${day}</div><div class="month">${mon}<br>${yr}</div></div>`;
 }
 function fmtFecha(iso){
   if(!iso) return "—";
   const d = new Date(iso+"T00:00:00");
   return d.toLocaleDateString('es-CL', {day:'2-digit', month:'short', year:'numeric'});
 }
-function escapeHtml(s){
-  return (s||"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function typeClass(tipo){
+  const map = {"Video / Reel":"type-video","Podcast":"type-podcast","Receta":"type-receta","Mito Bariátrico":"type-mito","Charla / Taller":"type-charla","Evento":"type-evento","Historia Paciente":"type-historia"};
+  return map[tipo] || "type-otro";
+}
+function statusClass(estado){
+  const map = {"Idea":"status-idea","Planificado":"status-planificado","Por grabar":"status-porgrabar","Grabado":"status-grabado","En edición":"status-edicion","Publicado":"status-publicado","Cancelado":"status-cancelado"};
+  return map[estado] || "status-idea";
+}
+function badgeClass(estado){
+  const map = {"Idea":"badge-idea","Planificado":"badge-planificado","Por grabar":"badge-porgrabar","Grabado":"badge-grabado","En edición":"badge-edicion","Publicado":"badge-publicado","Cancelado":"badge-cancelado"};
+  return map[estado] || "badge-idea";
 }
 
 function renderResumen(){
@@ -651,33 +702,35 @@ function renderResumen(){
   const pendientes = (counts["Idea"]||0) + (counts["Planificado"]||0);
 
   const stats = [
-    {num: total, label:"Contenidos totales", filter:""},
-    {num: pendientes, label:"Por planificar", filter:"pendientes"},
-    {num: enProceso, label:"En producción", filter:"produccion"},
-    {num: publicados, label:"Publicados", filter:"Publicado"},
-    {num: brands.length, label:"Marcas activas", filter:"marcas"},
+    {num:total, label:"CONTENIDOS TOTALES", sub:"Total registrado", icon:"teal", svg:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>', filter:""},
+    {num:pendientes, label:"POR PLANIFICAR", sub:"Próximos 30 días", icon:"gold", svg:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>', filter:"pendientes"},
+    {num:enProceso, label:"EN PRODUCCIÓN", sub:"En proceso", icon:"salmon", svg:'<polygon points="5 3 19 12 5 21 5 3"/>', filter:"produccion"},
+    {num:publicados, label:"PUBLICADOS", sub:"Esta semana", icon:"green", svg:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>', filter:"Publicado"},
   ];
+
   document.getElementById('stats-row').innerHTML = stats.map(s=>`
-    <div class="stat-card" onclick="goToFilter('${s.filter}')" style="cursor:pointer;"><div class="num">${s.num}</div><div class="label">${s.label}</div></div>
+    <div class="stat-card" onclick="goToFilter('${s.filter}')">
+      <div class="stat-icon ${s.icon}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${s.svg}</svg></div>
+      <div class="stat-info"><div class="num">${s.num}</div><div class="label">${s.label}</div><div class="sublabel">${s.sub}</div></div>
+    </div>
   `).join('');
 
-  const proximos = [...items]
-    .filter(i=> i.estado !== "Publicado" && i.estado !== "Cancelado")
-    .sort((a,b)=> new Date(a.fecha) - new Date(b.fecha))
-    .slice(0,6);
+  document.getElementById('marcas-num').textContent = brands.length;
 
+  const proximos = [...items].filter(i=> i.estado !== "Publicado" && i.estado !== "Cancelado").sort((a,b)=> new Date(a.fecha) - new Date(b.fecha)).slice(0,5);
   const body = document.getElementById('proximos-body');
   if(proximos.length===0){
-    body.innerHTML = `<tr class="empty-row"><td colspan="6">No hay contenidos próximos. Agrega uno en "Calendario de Contenido".</td></tr>`;
+    body.innerHTML = '<tr class="empty-row"><td colspan="7">No hay contenidos próximos.</td></tr>';
   } else {
     body.innerHTML = proximos.map(i=>`
       <tr>
-        <td>${fmtFecha(i.fecha)}</td>
-        <td>${escapeHtml(i.tipo)}</td>
+        <td>${fmtFechaCell(i.fecha)}</td>
+        <td><span class="type-badge ${typeClass(i.tipo)}">${escapeHtml(i.tipo)}</span></td>
         <td>${escapeHtml(i.tema)}</td>
         <td>${escapeHtml(i.responsables)}</td>
         <td>${i.marca? `<span class="tag">${escapeHtml(i.marca)}</span>`:'—'}</td>
-        <td><span class="badge ${badgeClass(i.estado)}">${i.estado}</span></td>
+        <td><span class="status ${statusClass(i.estado)}"><span class="status-dot"></span>${i.estado}</span></td>
+        <td><button class="action-btn" onclick="editItem('${i.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
       </tr>
     `).join('');
   }
@@ -688,7 +741,6 @@ function populateFilters(){
   const series = [...new Set(items.map(i=>i.serie))].sort();
   const estados = ["Idea","Planificado","Por grabar","Grabado","En edición","Publicado","Cancelado"];
   const marcas = [...new Set(items.map(i=>i.marca).filter(Boolean))].sort();
-
   fillSelect('filtro-tipo', tipos, 'Todos los tipos');
   fillSelect('filtro-serie', series, 'Todas las series');
   fillSelect('filtro-estado', estados, 'Todos los estados');
@@ -700,7 +752,6 @@ function fillSelect(id, opts, placeholder){
   sel.innerHTML = `<option value="">${placeholder}</option>` + opts.map(o=>`<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
   sel.value = current;
 }
-
 ['filtro-texto','filtro-tipo','filtro-serie','filtro-estado','filtro-marca'].forEach(id=>{
   document.getElementById(id).addEventListener('input', renderCalendario);
 });
@@ -711,7 +762,6 @@ function renderCalendario(){
   const fSerie = document.getElementById('filtro-serie').value;
   const fEstado = document.getElementById('filtro-estado').value;
   const fMarca = document.getElementById('filtro-marca').value;
-
   let filtered = [...items].sort((a,b)=> new Date(a.fecha) - new Date(b.fecha));
   filtered = filtered.filter(i=>{
     if(fTipo && i.tipo!==fTipo) return false;
@@ -721,29 +771,20 @@ function renderCalendario(){
     if(texto && !(i.tema.toLowerCase().includes(texto) || i.responsables.toLowerCase().includes(texto))) return false;
     return true;
   });
-
   const body = document.getElementById('calendario-body');
-  if(filtered.length===0){
-    body.innerHTML = `<tr class="empty-row"><td colspan="10">No se encontraron contenidos con estos filtros.</td></tr>`;
-    return;
-  }
+  if(filtered.length===0){ body.innerHTML = '<tr class="empty-row"><td colspan="10">No se encontraron contenidos.</td></tr>'; return; }
   body.innerHTML = filtered.map(i=>`
     <tr>
-      <td>${fmtFecha(i.fecha)}</td>
-      <td>${escapeHtml(i.tipo)}</td>
+      <td>${fmtFechaCell(i.fecha)}</td>
+      <td><span class="type-badge ${typeClass(i.tipo)}">${escapeHtml(i.tipo)}</span></td>
       <td>${escapeHtml(i.serie)}</td>
       <td style="max-width:220px;">${escapeHtml(i.tema)}</td>
       <td>${escapeHtml(i.responsables)}</td>
       <td>${i.marca? `<span class="tag">${escapeHtml(i.marca)}</span>`:'—'}</td>
       <td>${escapeHtml(i.plataforma)}</td>
-      <td><span class="badge ${badgeClass(i.estado)}">${i.estado}</span></td>
-      <td>${i.link? `<a href="${escapeHtml(i.link)}" target="_blank" style="color:var(--salmon);">Abrir</a>` : '—'}</td>
-      <td>
-        <div class="row-actions">
-          <button class="btn-ghost btn-sm" onclick="editItem('${i.id}')">Editar</button>
-          <button class="btn-danger btn-sm" onclick="deleteItem('${i.id}')">Eliminar</button>
-        </div>
-      </td>
+      <td><span class="status ${statusClass(i.estado)}"><span class="status-dot"></span>${i.estado}</span></td>
+      <td>${i.link? `<a href="${escapeHtml(i.link)}" target="_blank" style="color:var(--teal);font-weight:600;">Abrir</a>`:'—'}</td>
+      <td><div class="row-actions"><button class="btn-ghost btn-sm" onclick="editItem('${i.id}')">Editar</button><button class="btn-danger btn-sm" onclick="deleteItem('${i.id}')">Eliminar</button></div></td>
     </tr>
   `).join('');
 }
@@ -756,29 +797,13 @@ function renderKanban(){
     if(col === "Grabado / En edición") group = items.filter(i=> i.estado==="Grabado" || i.estado==="En edición");
     else group = items.filter(i=> i.estado===col);
     group.sort((a,b)=> new Date(a.fecha)-new Date(b.fecha));
-    return `
-      <div class="kanban-col">
-        <h4>${col} <span>${group.length}</span></h4>
-        ${group.length===0 ? `<div style="color:var(--texto-suave); font-size:12px; font-style:italic;">Sin contenidos</div>` :
-          group.map(i=>`
-            <div class="kanban-card" onclick="editItem('${i.id}')" style="cursor:pointer;">
-              <div class="titulo">${escapeHtml(i.tema)}</div>
-              <div class="meta">${fmtFecha(i.fecha)} · ${escapeHtml(i.tipo)}</div>
-              ${i.marca? `<div class="meta">${escapeHtml(i.marca)}</div>`:''}
-            </div>
-          `).join('')
-        }
-      </div>
-    `;
+    return `<div class="kanban-col"><h4>${col} <span>${group.length}</span></h4>${group.length===0?'<div style="color:var(--texto-suave);font-size:12px;font-style:italic;">Sin contenidos</div>':group.map(i=>`<div class="kanban-card" onclick="editItem('${i.id}')"><div class="titulo">${escapeHtml(i.tema)}</div><div class="meta">${fmtFecha(i.fecha)} · ${escapeHtml(i.tipo)}</div>${i.marca?`<div class="meta">${escapeHtml(i.marca)}</div>`:''}</div>`).join('')}</div>`;
   }).join('');
 }
 
 function renderMarcas(){
   const body = document.getElementById('marcas-body');
-  if(brands.length===0){
-    body.innerHTML = `<tr class="empty-row"><td colspan="7">Aún no hay marcas registradas.</td></tr>`;
-    return;
-  }
+  if(brands.length===0){ body.innerHTML = '<tr class="empty-row"><td colspan="7">Aún no hay marcas registradas.</td></tr>'; return; }
   body.innerHTML = brands.map(b=>`
     <tr>
       <td><strong>${escapeHtml(b.nombre)}</strong></td>
@@ -787,15 +812,9 @@ function renderMarcas(){
       <td><span class="badge ${b.estado==='Activo'?'badge-publicado':b.estado==='En coordinación'?'badge-porgrabar':'badge-idea'}">${escapeHtml(b.estado)}</span></td>
       <td>${escapeHtml(b.contraprestacion)||'—'}</td>
       <td style="max-width:220px;">${escapeHtml(b.notas)||'—'}</td>
-      <td>
-        <div class="row-actions">
-          <button class="btn-ghost btn-sm" onclick="editBrand('${b.id}')">Editar</button>
-          <button class="btn-danger btn-sm" onclick="deleteBrand('${b.id}')">Eliminar</button>
-        </div>
-      </td>
+      <td><div class="row-actions"><button class="btn-ghost btn-sm" onclick="editBrand('${b.id}')">Editar</button><button class="btn-danger btn-sm" onclick="deleteBrand('${b.id}')">Eliminar</button></div></td>
     </tr>
   `).join('');
-
   document.getElementById('marcas-datalist').innerHTML = brands.map(b=>`<option value="${escapeHtml(b.nombre)}">`).join('');
 }
 
@@ -816,8 +835,7 @@ function openItemModal(){
 }
 function closeItemModal(){ document.getElementById('item-modal-overlay').classList.remove('open'); }
 function editItem(id){
-  const i = items.find(x=>x.id===id);
-  if(!i) return;
+  const i = items.find(x=>x.id===id); if(!i) return;
   document.getElementById('item-modal-title').textContent = "Editar contenido";
   document.getElementById('item-id').value = i.id;
   document.getElementById('item-fecha').value = i.fecha;
@@ -835,14 +853,11 @@ function editItem(id){
 async function saveItem(){
   const id = document.getElementById('item-id').value;
   const tema = document.getElementById('item-tema').value.trim();
-  if(!tema){ alert("Por favor ingresa el tema o título del contenido."); return; }
+  if(!tema){ alert("Por favor ingresa el tema o título."); return; }
   const data = {
-    id: id || uid(),
-    fecha: document.getElementById('item-fecha').value,
-    tipo: document.getElementById('item-tipo').value,
-    serie: document.getElementById('item-serie').value,
-    plataforma: document.getElementById('item-plataforma').value,
-    tema: tema,
+    id: id || uid(), fecha: document.getElementById('item-fecha').value,
+    tipo: document.getElementById('item-tipo').value, serie: document.getElementById('item-serie').value,
+    plataforma: document.getElementById('item-plataforma').value, tema,
     responsables: document.getElementById('item-resp').value.trim(),
     marca: document.getElementById('item-marca').value.trim(),
     estado: document.getElementById('item-estado').value,
@@ -850,22 +865,13 @@ async function saveItem(){
     notas: document.getElementById('item-notas').value.trim(),
   };
   const ok = await upsertItem(data);
-  if(ok){
-    const idx = items.findIndex(x=>x.id===data.id);
-    if(idx>=0) items[idx] = data; else items.push(data);
-    closeItemModal();
-    renderAll();
-  }
+  if(ok){ const idx = items.findIndex(x=>x.id===data.id); if(idx>=0) items[idx]=data; else items.push(data); closeItemModal(); renderAll(); }
 }
 async function deleteItem(id){
-  if(!confirm("¿Eliminar este contenido del calendario?")) return;
+  if(!confirm("¿Eliminar este contenido?")) return;
   const ok = await removeItem(id);
-  if(ok){
-    items = items.filter(x=>x.id!==id);
-    renderAll();
-  }
+  if(ok){ items = items.filter(x=>x.id!==id); renderAll(); }
 }
-
 function openBrandModal(){
   document.getElementById('brand-modal-title').textContent = "Nueva marca / convenio";
   document.getElementById('brand-id').value = "";
@@ -879,8 +885,7 @@ function openBrandModal(){
 }
 function closeBrandModal(){ document.getElementById('brand-modal-overlay').classList.remove('open'); }
 function editBrand(id){
-  const b = brands.find(x=>x.id===id);
-  if(!b) return;
+  const b = brands.find(x=>x.id===id); if(!b) return;
   document.getElementById('brand-modal-title').textContent = "Editar marca / convenio";
   document.getElementById('brand-id').value = b.id;
   document.getElementById('brand-nombre').value = b.nombre;
@@ -894,73 +899,40 @@ function editBrand(id){
 async function saveBrand(){
   const id = document.getElementById('brand-id').value;
   const nombre = document.getElementById('brand-nombre').value.trim();
-  if(!nombre){ alert("Por favor ingresa el nombre de la marca o empresa."); return; }
-  const data = {
-    id: id || uid(),
-    nombre,
-    tipo: document.getElementById('brand-tipo').value.trim(),
+  if(!nombre){ alert("Ingresa el nombre de la marca."); return; }
+  const data = { id: id || uid(), nombre, tipo: document.getElementById('brand-tipo').value.trim(),
     contacto: document.getElementById('brand-contacto').value.trim(),
     estado: document.getElementById('brand-estado').value,
     contraprestacion: document.getElementById('brand-contraprestacion').value.trim(),
     notas: document.getElementById('brand-notas').value.trim(),
   };
   const ok = await upsertBrand(data);
-  if(ok){
-    const idx = brands.findIndex(x=>x.id===data.id);
-    if(idx>=0) brands[idx] = data; else brands.push(data);
-    closeBrandModal();
-    renderAll();
-  }
+  if(ok){ const idx = brands.findIndex(x=>x.id===data.id); if(idx>=0) brands[idx]=data; else brands.push(data); closeBrandModal(); renderAll(); }
 }
 async function deleteBrand(id){
-  if(!confirm("¿Eliminar esta marca / convenio?")) return;
+  if(!confirm("¿Eliminar esta marca?")) return;
   const ok = await removeBrand(id);
-  if(ok){
-    brands = brands.filter(x=>x.id!==id);
-    renderAll();
-  }
+  if(ok){ brands = brands.filter(x=>x.id!==id); renderAll(); }
 }
-
 function exportBackup(){
   const payload = {items, brands, exportedAt: new Date().toISOString()};
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
+  const a = document.createElement('a'); a.href = url;
   a.download = `barilife_respaldo_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  a.click(); URL.revokeObjectURL(url);
 }
 function importBackup(e){
-  const file = e.target.files[0];
-  if(!file) return;
+  const file = e.target.files[0]; if(!file) return;
   const reader = new FileReader();
   reader.onload = function(ev){
-    try{
-      const payload = JSON.parse(ev.target.result);
-      if(payload.items) items = payload.items;
-      if(payload.brands) brands = payload.brands;
-      renderAll();
-      alert("Respaldo importado correctamente.");
-    }catch(err){
-      alert("No se pudo leer el archivo de respaldo.");
-    }
+    try{ const p = JSON.parse(ev.target.result); if(p.items) items=p.items; if(p.brands) brands=p.brands; renderAll(); alert("Respaldo importado."); }
+    catch(err){ alert("No se pudo leer el archivo."); }
   };
-  reader.readAsText(file);
-  e.target.value = "";
+  reader.readAsText(file); e.target.value = "";
 }
-
-function renderAll(){
-  renderResumen();
-  populateFilters();
-  renderCalendario();
-  renderKanban();
-  renderMarcas();
-}
-
-document.querySelectorAll('.modal-overlay').forEach(ov=>{
-  ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
-});
+function renderAll(){ renderResumen(); populateFilters(); renderCalendario(); renderKanban(); renderMarcas(); }
+document.querySelectorAll('.modal-overlay').forEach(ov=>{ ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); }); });
 </script>
 </body>
 </html>
