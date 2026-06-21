@@ -1,379 +1,308 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bari Talks con COBEC — Panel de Contenido</title>
+<title>BariLife — Panel de Contenido by COBEC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   :root{
-    --verde:#2D4A3E;
-    --verde-claro:#3E6354;
-    --dorado:#C9A96E;
-    --dorado-suave:#E3D2AC;
-    --crema:#F7F3EE;
-    --crema-osc:#EFE8DD;
-    --rosa:#C99A9E;
-    --texto:#2A2926;
-    --texto-suave:#6B6660;
-    --blanco:#FFFFFF;
-    --borde:#E2D9C9;
-    --sombra: 0 4px 18px rgba(45,74,62,0.08);
+    --navy:#2B2D6E;
+    --navy-2:#3D3F8F;
+    --navy-3:#F5F4FA;
+    --salmon:#E09282;
+    --salmon-soft:#C97B6C;
+    --salmon-light:#F8E4DF;
+    --texto:#2B2D6E;
+    --texto-suave:#8A87A8;
+    --borde:#E8E5F2;
+    --verde-estado:#2F8F62;
+    --rojo-estado:#C75858;
+    --sombra: 0 2px 12px rgba(43,45,110,0.06);
+    --sombra-hover: 0 6px 24px rgba(43,45,110,0.10);
+    --sidebar-bg:linear-gradient(180deg, #2B2D6E 0%, #1E2058 100%);
+    --sidebar-borde:rgba(255,255,255,0.08);
+    --sidebar-texto:rgba(255,255,255,0.75);
+    --sidebar-texto-suave:rgba(255,255,255,0.45);
+    --radius:14px;
+    --transition:all .2s ease;
   }
-  *{box-sizing:border-box;}
+  *{box-sizing:border-box; margin:0; padding:0;}
   body{
-    margin:0;
-    background:var(--crema);
-    font-family:'Montserrat', Arial, sans-serif;
+    background:#F9F8FC;
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color:var(--texto);
+    -webkit-font-smoothing:antialiased;
   }
-  h1,h2,h3,.display{
-    font-family:'Georgia', 'Times New Roman', serif;
-    letter-spacing:0.3px;
+  h1,h2,h3{
+    font-family:'Playfair Display', Georgia, serif;
+    font-weight:600;
+    letter-spacing:-0.2px;
   }
 
-  /* ===== HEADER ===== */
-  header{
-    background:linear-gradient(135deg, var(--verde) 0%, var(--verde-claro) 100%);
-    color:var(--crema);
-    padding:28px 36px 26px;
+  .app-shell{ display:flex; min-height:100vh; }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar{
+    width:250px;
+    background:var(--sidebar-bg);
+    padding:28px 18px;
     display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    flex-wrap:wrap;
-    gap:16px;
-  }
-  .brand-eyebrow{
-    font-size:11px;
-    letter-spacing:3px;
-    text-transform:uppercase;
-    color:var(--dorado-suave);
-    margin-bottom:6px;
-  }
-  header h1{
-    font-size:30px;
-    margin:0;
-    color:var(--blanco);
-  }
-  header p.sub{
-    margin:6px 0 0;
-    font-size:13px;
-    color:var(--dorado-suave);
-    font-family:'Montserrat',sans-serif;
-  }
-  .mic-icon{
-    width:46px;height:46px;
-    border-radius:50%;
-    border:2px solid var(--dorado);
-    display:flex;align-items:center;justify-content:center;
-    font-size:20px;
+    flex-direction:column;
     flex-shrink:0;
   }
-  .header-left{display:flex; align-items:center; gap:14px;}
-
-  /* ===== NAV TABS ===== */
-  .tabs{
-    display:flex;
-    gap:4px;
-    padding:0 36px;
-    background:var(--blanco);
-    border-bottom:1px solid var(--borde);
-    overflow-x:auto;
+  .brand-block{
+    display:flex; align-items:center; justify-content:center;
+    padding:8px 8px 24px;
+    border-bottom:1px solid var(--sidebar-borde);
+    margin-bottom:24px;
   }
-  .tab{
-    padding:16px 20px;
-    font-size:13px;
-    font-weight:600;
-    color:var(--texto-suave);
+  .brand-logo{
+    width:100%;
+    max-width:180px;
+    background:#fff;
+    border-radius:16px;
+    padding:12px 14px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  .side-nav{ display:flex; flex-direction:column; gap:4px; flex:1; }
+  .side-tab{
+    padding:12px 16px;
+    border-radius:10px;
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--sidebar-texto);
     cursor:pointer;
-    border-bottom:3px solid transparent;
-    white-space:nowrap;
-    transition:all .15s;
+    transition:var(--transition);
+    display:flex; align-items:center; gap:12px;
+    border-left:3px solid transparent;
+    letter-spacing:0.1px;
   }
-  .tab:hover{ color:var(--verde); }
-  .tab.active{
-    color:var(--verde);
-    border-bottom-color:var(--dorado);
+  .side-tab svg{ width:18px; height:18px; flex-shrink:0; }
+  .side-tab:hover{ background:rgba(255,255,255,0.08); color:#fff; }
+  .side-tab.active{
+    background:rgba(224,146,130,0.15);
+    color:var(--salmon);
+    border-left-color:var(--salmon);
+  }
+  .side-tab.active svg{ opacity:1; }
+  .side-footer{
+    margin-top:20px; padding-top:18px; border-top:1px solid var(--sidebar-borde);
+    font-size:11px; color:var(--sidebar-texto-suave); line-height:1.6;
+    letter-spacing:0.2px;
   }
 
-  main{ padding:28px 36px 60px; max-width:1400px; margin:0 auto; }
+  /* ===== MAIN ===== */
+  .main-area{ flex:1; min-width:0; display:flex; flex-direction:column; background:#F9F8FC; }
+
+  header{
+    background:#fff;
+    padding:28px 40px;
+    border-bottom:1px solid var(--borde);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
+  }
+  header h1{ font-size:24px; color:var(--texto); font-weight:600; }
+  header p.sub{ margin:6px 0 0; font-size:13px; color:var(--texto-suave); font-family:'Inter',sans-serif; font-weight:400; }
+  .sync-pill{
+    font-size:12px; color:var(--navy); display:flex; align-items:center; gap:7px;
+    background:var(--navy-3); padding:8px 16px; border-radius:24px; border:1px solid var(--borde);
+    font-weight:500;
+  }
+  .sync-dot{ width:7px;height:7px;border-radius:50%; background:var(--verde-estado); display:inline-block; }
+
+  main{ padding:32px 40px 60px; max-width:1500px; }
   .view{ display:none; }
-  .view.active{ display:block; animation:fade .25s ease; }
-  @keyframes fade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+  .view.active{ display:block; animation:fade .3s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
 
   /* ===== STAT CARDS ===== */
   .stats-row{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:16px;
-    margin-bottom:28px;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:18px;
+    margin-bottom:32px;
   }
   .stat-card{
-    background:var(--blanco);
+    background:#fff;
     border:1px solid var(--borde);
-    border-radius:10px;
-    padding:18px 20px;
+    border-radius:var(--radius);
+    padding:22px 24px;
     box-shadow:var(--sombra);
     position:relative;
     overflow:hidden;
+    transition:var(--transition);
   }
+  .stat-card:hover{ box-shadow:var(--sombra-hover); transform:translateY(-1px); }
   .stat-card::before{
     content:'';
     position:absolute; left:0; top:0; bottom:0; width:4px;
-    background:var(--dorado);
+    background:linear-gradient(180deg, var(--salmon), var(--navy));
+    border-radius:0 2px 2px 0;
   }
-  .stat-card .num{
-    font-family:'Georgia',serif;
-    font-size:30px;
-    color:var(--verde);
-    font-weight:bold;
-  }
-  .stat-card .label{
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    color:var(--texto-suave);
-    margin-top:2px;
-  }
+  .stat-card .num{ font-family:'Playfair Display',serif; font-size:32px; color:var(--navy); font-weight:700; line-height:1; }
+  .stat-card .label{ font-size:11px; text-transform:uppercase; letter-spacing:1.2px; color:var(--texto-suave); margin-top:6px; font-weight:600; }
 
   /* ===== SECTION HEADER ===== */
   .section-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:16px;
-    flex-wrap:wrap;
-    gap:12px;
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:20px; flex-wrap:wrap; gap:14px;
   }
-  .section-head h2{
-    font-size:20px;
-    color:var(--verde);
-    margin:0;
-  }
+  .section-head h2{ font-size:20px; color:var(--navy); }
   .actions{ display:flex; gap:10px; flex-wrap:wrap; }
 
   button{
-    font-family:'Montserrat',sans-serif;
-    cursor:pointer;
-    border:none;
-    border-radius:7px;
-    padding:10px 16px;
-    font-size:13px;
-    font-weight:600;
-    transition:all .15s;
+    font-family:'Inter',sans-serif; cursor:pointer; border:none;
+    border-radius:10px; padding:10px 18px; font-size:13px; font-weight:600;
+    transition:var(--transition);
+    letter-spacing:0.1px;
   }
-  .btn-primary{ background:var(--verde); color:var(--blanco); }
-  .btn-primary:hover{ background:var(--verde-claro); }
-  .btn-gold{ background:var(--dorado); color:var(--verde); }
-  .btn-gold:hover{ background:var(--dorado-suave); }
-  .btn-ghost{ background:transparent; color:var(--verde); border:1px solid var(--borde); }
-  .btn-ghost:hover{ background:var(--crema-osc); }
-  .btn-danger{ background:transparent; color:#a14545; border:1px solid #e2c3c3; }
-  .btn-danger:hover{ background:#fbeeee; }
-  .btn-sm{ padding:6px 10px; font-size:12px; border-radius:6px; }
+  .btn-primary{ background:linear-gradient(135deg, var(--salmon) 0%, #E8A599 100%); color:#fff; box-shadow:0 2px 8px rgba(224,146,130,0.3); }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 4px 14px rgba(224,146,130,0.35); }
+  .btn-purple{ background:linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%); color:#fff; box-shadow:0 2px 8px rgba(43,45,110,0.2); }
+  .btn-purple:hover{ transform:translateY(-1px); box-shadow:0 4px 14px rgba(43,45,110,0.25); }
+  .btn-ghost{ background:#fff; color:var(--navy); border:1px solid var(--borde); }
+  .btn-ghost:hover{ background:var(--navy-3); border-color:#d4d1e6; }
+  .btn-danger{ background:#fff; color:var(--rojo-estado); border:1px solid #f0d3d3; }
+  .btn-danger:hover{ background:#fdf1f1; }
+  .btn-sm{ padding:7px 12px; font-size:12px; border-radius:8px; }
 
   /* ===== FILTROS ===== */
-  .filters{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:18px;
-  }
+  .filters{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
   select, input[type=text], input[type=date]{
-    font-family:'Montserrat',sans-serif;
-    padding:9px 12px;
-    border:1px solid var(--borde);
-    border-radius:7px;
-    font-size:13px;
-    background:var(--blanco);
-    color:var(--texto);
+    font-family:'Inter',sans-serif; padding:10px 14px; border:1px solid var(--borde);
+    border-radius:10px; font-size:13px; background:#fff; color:var(--texto);
+    transition:var(--transition);
   }
-  select:focus, input:focus, textarea:focus{ outline:2px solid var(--dorado); outline-offset:1px; }
+  select:focus, input:focus, textarea:focus{ outline:none; border-color:var(--salmon); box-shadow:0 0 0 3px rgba(224,146,130,0.15); }
+  ::placeholder{ color:var(--texto-suave); opacity:0.6; }
 
   /* ===== TABLE ===== */
   .table-wrap{
-    background:var(--blanco);
-    border:1px solid var(--borde);
-    border-radius:10px;
-    overflow:hidden;
-    box-shadow:var(--sombra);
+    background:#fff; border:1px solid var(--borde); border-radius:var(--radius);
+    overflow:hidden; box-shadow:var(--sombra);
   }
   table{ width:100%; border-collapse:collapse; font-size:13px; }
   thead th{
-    background:var(--verde);
-    color:var(--crema);
-    text-align:left;
-    padding:12px 14px;
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-    font-weight:600;
+    background:var(--navy-3); color:var(--navy); text-align:left; padding:14px 16px;
+    font-size:11px; text-transform:uppercase; letter-spacing:0.8px; font-weight:700;
   }
-  tbody td{
-    padding:12px 14px;
-    border-bottom:1px solid var(--crema-osc);
-    vertical-align:top;
-  }
-  tbody tr:hover{ background:var(--crema); }
+  tbody td{ padding:14px 16px; border-bottom:1px solid var(--navy-3); vertical-align:top; color:var(--texto); }
+  tbody tr{ transition:var(--transition); }
+  tbody tr:hover{ background:var(--navy-3); }
   tbody tr:last-child td{ border-bottom:none; }
-  .empty-row td{
-    text-align:center;
-    padding:40px;
-    color:var(--texto-suave);
-    font-style:italic;
-  }
+  .empty-row td{ text-align:center; padding:48px; color:var(--texto-suave); font-style:italic; }
 
-  .badge{
-    display:inline-block;
-    padding:4px 10px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:700;
-    white-space:nowrap;
-  }
-  .badge-idea{ background:#EFEAE2; color:#8a8170; }
-  .badge-planificado{ background:#E4ECE8; color:#3E6354; }
-  .badge-porgrabar{ background:#FBE9D7; color:#a8702f; }
-  .badge-grabado{ background:#E1E6F2; color:#3c4f8a; }
-  .badge-edicion{ background:#F0DFE2; color:#9c4a55; }
-  .badge-publicado{ background:#DDEFE0; color:#27704a; }
-  .badge-cancelado{ background:#F3E3E3; color:#a33d3d; }
+  .badge{ display:inline-block; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; letter-spacing:0.2px; }
+  .badge-idea{ background:#EDEBF7; color:#5D5F9E; }
+  .badge-planificado{ background:#E0E1F5; color:var(--navy); }
+  .badge-porgrabar{ background:var(--salmon-light); color:var(--salmon-soft); }
+  .badge-grabado{ background:#E0E1F5; color:var(--navy); }
+  .badge-edicion{ background:#F5DDD8; color:var(--salmon-soft); }
+  .badge-publicado{ background:#DFF3E8; color:#2F8F62; }
+  .badge-cancelado{ background:#FBE3E3; color:#C75858; }
 
   .tag{
-    display:inline-block;
-    padding:3px 9px;
-    border-radius:6px;
-    font-size:11px;
-    background:var(--dorado-suave);
-    color:var(--verde);
-    font-weight:600;
-    margin-right:4px;
+    display:inline-block; padding:4px 10px; border-radius:8px; font-size:11px;
+    background:var(--salmon-light); color:var(--salmon-soft); font-weight:600; margin-right:4px;
+    letter-spacing:0.2px;
   }
 
   .row-actions{ display:flex; gap:6px; }
 
   /* ===== MODAL ===== */
   .modal-overlay{
-    position:fixed; inset:0;
-    background:rgba(45,74,62,0.45);
-    display:none;
-    align-items:center; justify-content:center;
-    z-index:100;
-    padding:20px;
+    position:fixed; inset:0; background:rgba(43,45,110,0.35); backdrop-filter:blur(4px);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:20px;
   }
   .modal-overlay.open{ display:flex; }
   .modal{
-    background:var(--blanco);
-    border-radius:14px;
-    padding:28px 30px;
-    width:100%;
-    max-width:560px;
-    max-height:90vh;
-    overflow-y:auto;
-    box-shadow:0 12px 40px rgba(0,0,0,0.2);
+    background:#fff; border:1px solid var(--borde); border-radius:18px;
+    padding:32px 34px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto;
+    box-shadow:0 20px 60px rgba(43,45,110,0.18);
   }
-  .modal h3{ margin:0 0 18px; color:var(--verde); font-size:19px; }
-  .field{ margin-bottom:14px; }
+  .modal h3{ margin:0 0 22px; color:var(--navy); font-size:20px; }
+  .field{ margin-bottom:16px; }
   .field label{
-    display:block;
-    font-size:12px;
-    font-weight:600;
-    color:var(--texto-suave);
-    margin-bottom:5px;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
+    display:block; font-size:11px; font-weight:700; color:var(--texto-suave);
+    margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px;
   }
-  .field input, .field select, .field textarea{
-    width:100%;
-  }
-  .field textarea{ resize:vertical; min-height:60px; font-family:'Montserrat',sans-serif; }
-  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .field input, .field select, .field textarea{ width:100%; }
+  .field textarea{ resize:vertical; min-height:70px; font-family:'Inter',sans-serif; padding:10px 14px; border:1px solid var(--borde); border-radius:10px; font-size:13px; color:var(--texto); }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
   .modal-footer{
-    display:flex; justify-content:flex-end; gap:10px; margin-top:20px;
-    border-top:1px solid var(--crema-osc); padding-top:18px;
+    display:flex; justify-content:flex-end; gap:10px; margin-top:24px;
+    border-top:1px solid var(--borde); padding-top:20px;
   }
-
-  /* ===== EMPTY STATE ===== */
-  .empty-state{
-    text-align:center;
-    padding:60px 20px;
-    color:var(--texto-suave);
-  }
-  .empty-state .mic{ font-size:40px; margin-bottom:10px; }
 
   /* ===== KANBAN ===== */
-  .kanban{
-    display:grid;
-    grid-template-columns:repeat(5,minmax(220px,1fr));
-    gap:14px;
-    overflow-x:auto;
-  }
-  .kanban-col{
-    background:var(--blanco);
-    border:1px solid var(--borde);
-    border-radius:10px;
-    padding:14px;
-    min-height:200px;
-  }
+  .kanban{ display:grid; grid-template-columns:repeat(5,minmax(220px,1fr)); gap:16px; overflow-x:auto; padding-bottom:4px; }
+  .kanban-col{ background:#fff; border:1px solid var(--borde); border-radius:var(--radius); padding:16px; min-height:200px; }
   .kanban-col h4{
-    margin:0 0 12px;
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-    color:var(--texto-suave);
-    display:flex; justify-content:space-between;
+    margin:0 0 14px; font-size:11px; text-transform:uppercase; letter-spacing:0.8px;
+    color:var(--texto-suave); display:flex; justify-content:space-between; font-weight:700;
   }
   .kanban-card{
-    background:var(--crema);
-    border-left:3px solid var(--dorado);
-    border-radius:6px;
-    padding:10px 12px;
-    margin-bottom:10px;
-    font-size:12.5px;
+    background:var(--navy-3); border-left:3px solid var(--salmon); border-radius:10px;
+    padding:12px 14px; margin-bottom:10px; font-size:12.5px; transition:var(--transition);
   }
-  .kanban-card .titulo{ font-weight:700; color:var(--verde); margin-bottom:4px; }
+  .kanban-card:hover{ box-shadow:var(--sombra); transform:translateY(-1px); }
+  .kanban-card .titulo{ font-weight:600; color:var(--navy); margin-bottom:5px; }
   .kanban-card .meta{ color:var(--texto-suave); font-size:11px; }
 
-  /* ===== FOOTER NOTE ===== */
-  .footer-note{
-    text-align:center;
-    font-size:11px;
-    color:var(--texto-suave);
-    margin-top:30px;
-  }
+  .footer-note{ text-align:center; font-size:11px; color:var(--texto-suave); margin-top:36px; letter-spacing:0.3px; }
+
+  /* ===== GUIA SECTION ===== */
+  .guia-item{ padding:18px 0; border-bottom:1px solid var(--borde); }
+  .guia-item:last-child{ border-bottom:none; }
+  .guia-item strong{ color:var(--navy); font-size:14px; }
+  .guia-item p{ color:var(--texto-suave); margin:5px 0 0; font-size:13px; line-height:1.6; }
 
   @media(max-width:900px){
+    .app-shell{ flex-direction:column; }
+    .sidebar{ width:100%; flex-direction:row; overflow-x:auto; padding:14px 16px; }
+    .brand-block{ display:none; }
+    .side-nav{ flex-direction:row; gap:2px; }
+    .side-tab{ font-size:12px; padding:10px 12px; white-space:nowrap; }
+    .side-footer{ display:none; }
     .field-row{ grid-template-columns:1fr; }
     .kanban{ grid-template-columns:1fr; }
-    header{ padding:22px 18px; }
-    main{ padding:20px 16px 40px; }
-    .tabs{ padding:0 16px; }
+    header{ padding:22px 20px; }
+    main{ padding:24px 20px 40px; }
   }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <div class="mic-icon">🎙️</div>
-    <div>
-      <div class="brand-eyebrow">@cobecbiobio</div>
-      <h1>Bari Talks con COBEC</h1>
-      <p class="sub">Panel de gestión de contenido, comunidad y convenios</p>
-    </div>
-  </div>
-  <div style="text-align:right;">
-    <p class="sub" style="margin:0;" id="sync-status">Conectando con Supabase...</p>
-  </div>
-</header>
+<div class="app-shell">
 
-<nav class="tabs">
-  <div class="tab active" data-view="resumen">Resumen</div>
-  <div class="tab" data-view="calendario">Calendario de Contenido</div>
-  <div class="tab" data-view="kanban">Vista Kanban</div>
-  <div class="tab" data-view="marcas">Marcas y Convenios</div>
-  <div class="tab" data-view="guia">Guía de Uso</div>
-</nav>
+  <aside class="sidebar">
+    <div class="brand-block">
+      <img src="logo.png" alt="BariLife by COBEC" class="brand-logo">
+    </div>
+    <nav class="side-nav">
+      <div class="side-tab active" data-view="resumen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Resumen</div>
+      <div class="side-tab" data-view="calendario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="8" y2="18.01"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>Calendario</div>
+      <div class="side-tab" data-view="kanban"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="5" height="15" rx="1.5"/></svg>Kanban</div>
+      <div class="side-tab" data-view="marcas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg>Marcas</div>
+      <div class="side-tab" data-view="guia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Gu&iacute;a</div>
+    </nav>
+    <div class="side-footer">
+      Comunidad bariátrica · Educación, nutrición y movimiento.<br>Tu nueva vida, nuestra comunidad.
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <header>
+      <div>
+        <h1>BariLife — Panel de Contenido</h1>
+        <p class="sub">Gestión de podcast, recetas, comunidad y convenios · @cobecbiobio</p>
+      </div>
+      <div class="sync-pill"><span class="sync-dot"></span><span id="sync-status">Conectando con Supabase...</span></div>
+    </header>
+
 
 <main>
 
@@ -456,26 +385,26 @@
   <!-- ============ GUÍA ============ -->
   <section class="view" id="view-guia">
     <div class="section-head"><h2>Guía de uso del panel</h2></div>
-    <div class="table-wrap" style="padding:24px;">
-      <div style="display:grid; gap:18px;">
-        <div><strong style="color:var(--verde);">Resumen</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Vista rápida de cuántos contenidos hay por estado y los próximos 5 a producir, ordenados por fecha.</p></div>
-        <div><strong style="color:var(--verde);">Calendario de Contenido</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Registro completo y editable de cada pieza: podcast, receta, mito bariátrico, charla, evento o historia de paciente. Usa los filtros para encontrar algo rápido.</p></div>
-        <div><strong style="color:var(--verde);">Vista Kanban</strong><p style="color:var(--texto-suave); margin:4px 0 0;">El mismo contenido organizado por etapa de producción: Idea → Planificado → Por grabar → Grabado/En edición → Publicado. Útil para reuniones de equipo.</p></div>
-        <div><strong style="color:var(--verde);">Marcas y Convenios</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Detalle de cada acuerdo comercial (Barifit Chile, ChileSuplementos, etc.): qué se entrega a cambio, estado del convenio y contacto.</p></div>
-        <div><strong style="color:var(--verde);">Organización en Drive</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Sugerencia: una carpeta por mes ("Bari Talks - Julio 2026") con subcarpetas Guiones / Material Bruto / Ediciones Finales / Autorizaciones de Pacientes. Pega el link de cada carpeta en la columna "Drive" del calendario.</p></div>
-        <div><strong style="color:var(--verde);">Conexión a Supabase</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Este panel está conectado a tu proyecto de Supabase. Tú y Macarena pueden estar ambas con el panel abierto al mismo tiempo y ver los cambios en vivo, sin recargar la página. Si ves "Conectando con Supabase..." y no avanza, revisa que el SUPABASE_URL y SUPABASE_ANON_KEY estén bien pegados en el código, y que las tablas existan en tu proyecto.</p></div>
-        <div><strong style="color:var(--verde);">Respaldo de datos</strong><p style="color:var(--texto-suave); margin:4px 0 0;">Usa el botón "Exportar respaldo" para guardar una copia en JSON. Aunque los datos viven en Supabase (no se pierden al cerrar el navegador), es buena práctica respaldar antes de cambios grandes.</p></div>
-      </div>
-      <div style="margin-top:22px; display:flex; gap:10px;">
-        <button class="btn-gold" onclick="exportBackup()">⬇ Exportar respaldo (JSON)</button>
-        <button class="btn-ghost" onclick="document.getElementById('import-file').click()">⬆ Importar respaldo</button>
+    <div class="table-wrap" style="padding:28px 32px;">
+      <div class="guia-item"><strong>Resumen</strong><p>Vista rapida de cuantos contenidos hay por estado y los proximos a producir, ordenados por fecha.</p></div>
+      <div class="guia-item"><strong>Calendario de Contenido</strong><p>Registro completo y editable de cada pieza: podcast, receta, mito bariatrico, charla, evento o historia de paciente. Usa los filtros para encontrar algo rapido.</p></div>
+      <div class="guia-item"><strong>Vista Kanban</strong><p>El mismo contenido organizado por etapa de produccion: Idea, Planificado, Por grabar, Grabado/En edicion, Publicado. Util para reuniones de equipo.</p></div>
+      <div class="guia-item"><strong>Marcas y Convenios</strong><p>Detalle de cada acuerdo comercial (Barifit Chile, ChileSuplementos, etc.): que se entrega a cambio, estado del convenio y contacto.</p></div>
+      <div class="guia-item"><strong>Organizacion en Drive</strong><p>Sugerencia: una carpeta por mes con subcarpetas Guiones / Material Bruto / Ediciones Finales / Autorizaciones de Pacientes. Pega el link de cada carpeta en la columna "Drive" del calendario.</p></div>
+      <div class="guia-item"><strong>Conexion a Supabase</strong><p>Este panel esta conectado a tu proyecto de Supabase. Tu y Macarena pueden estar ambas con el panel abierto al mismo tiempo y ver los cambios en vivo, sin recargar la pagina.</p></div>
+      <div class="guia-item"><strong>Respaldo de datos</strong><p>Usa el boton "Exportar respaldo" para guardar una copia en JSON. Aunque los datos viven en Supabase, es buena practica respaldar antes de cambios grandes.</p></div>
+      <div style="margin-top:24px; display:flex; gap:12px;">
+        <button class="btn-primary" onclick="exportBackup()">Exportar respaldo</button>
+        <button class="btn-ghost" onclick="document.getElementById('import-file').click()">Importar respaldo</button>
         <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importBackup(event)">
       </div>
     </div>
   </section>
 
-  <p class="footer-note">Bari Talks con COBEC · Panel interno de planificación · Conectado a Supabase — datos en vivo entre todos los que tengan el link</p>
+  <p class="footer-note">BariLife by COBEC · Panel interno de planificación · Conectado a Supabase — datos en vivo entre todos los que tengan el link</p>
 </main>
+  </div>
+</div>
 
 <!-- ============ MODAL: CONTENIDO ============ -->
 <div class="modal-overlay" id="item-modal-overlay">
@@ -577,14 +506,6 @@
 </div>
 
 <script>
-/* ============================================================
-   CONEXIÓN A SUPABASE
-   ============================================================
-   1. Reemplaza SUPABASE_URL y SUPABASE_ANON_KEY abajo con los
-      datos de tu proyecto (Project Settings → API en Supabase).
-   2. Asegúrate de haber corrido el script SQL que crea las
-      tablas bari_talks_items y bari_talks_brands.
-   ============================================================ */
 const SUPABASE_URL = "https://cmunzxucsljshnoczneo.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_73-mimGQG8c1pqd4XLAhPg_PCfWVenc";
 
@@ -640,9 +561,9 @@ function flashSync(msg, isError){
   const el = document.getElementById('sync-status');
   if(!el) return;
   el.textContent = msg;
-  el.style.color = isError ? "#e3b3b3" : "var(--dorado-suave)";
+  el.style.color = isError ? "#e3b3b3" : "var(--navy)";
   clearTimeout(window._syncTimeout);
-  window._syncTimeout = setTimeout(()=>{ el.textContent = "Conectado — datos en vivo"; el.style.color="var(--dorado-suave)"; }, 1800);
+  window._syncTimeout = setTimeout(()=>{ el.textContent = "Conectado — datos en vivo"; el.style.color="var(--navy)"; }, 1800);
 }
 
 function seedData(){
@@ -673,7 +594,6 @@ async function initApp(){
   document.getElementById('sync-status').textContent = "Conectado — datos en vivo";
   renderAll();
 
-  // Suscripción en tiempo real: si otra persona edita, esta pantalla se actualiza sola
   sb.channel('bari_talks_items_changes')
     .on('postgres_changes', {event:'*', schema:'public', table:'bari_talks_items'}, async ()=>{
       items = await loadData();
@@ -688,21 +608,15 @@ async function initApp(){
 }
 initApp();
 
-/* ============================================================
-   NAVEGACIÓN
-   ============================================================ */
-document.querySelectorAll('.tab').forEach(tab=>{
+document.querySelectorAll('.side-tab').forEach(tab=>{
   tab.addEventListener('click', ()=> switchView(tab.dataset.view));
 });
 function switchView(name){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.view===name));
+  document.querySelectorAll('.side-tab').forEach(t=>t.classList.toggle('active', t.dataset.view===name));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id==='view-'+name));
   renderAll();
 }
 
-/* ============================================================
-   HELPERS
-   ============================================================ */
 function badgeClass(estado){
   const map = {
     "Idea":"badge-idea", "Planificado":"badge-planificado", "Por grabar":"badge-porgrabar",
@@ -719,9 +633,6 @@ function escapeHtml(s){
   return (s||"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
-/* ============================================================
-   RENDER: RESUMEN
-   ============================================================ */
 function renderResumen(){
   const counts = {};
   items.forEach(i=> counts[i.estado] = (counts[i.estado]||0)+1);
@@ -763,9 +674,6 @@ function renderResumen(){
   }
 }
 
-/* ============================================================
-   RENDER: CALENDARIO
-   ============================================================ */
 function populateFilters(){
   const tipos = [...new Set(items.map(i=>i.tipo))].sort();
   const series = [...new Set(items.map(i=>i.serie))].sort();
@@ -820,7 +728,7 @@ function renderCalendario(){
       <td>${i.marca? `<span class="tag">${escapeHtml(i.marca)}</span>`:'—'}</td>
       <td>${escapeHtml(i.plataforma)}</td>
       <td><span class="badge ${badgeClass(i.estado)}">${i.estado}</span></td>
-      <td>${i.link? `<a href="${escapeHtml(i.link)}" target="_blank" style="color:var(--verde);">Abrir</a>` : '—'}</td>
+      <td>${i.link? `<a href="${escapeHtml(i.link)}" target="_blank" style="color:var(--salmon);">Abrir</a>` : '—'}</td>
       <td>
         <div class="row-actions">
           <button class="btn-ghost btn-sm" onclick="editItem('${i.id}')">Editar</button>
@@ -831,10 +739,6 @@ function renderCalendario(){
   `).join('');
 }
 
-/* ============================================================
-   RENDER: KANBAN
-   ============================================================ */
-const KANBAN_COLS = ["Idea","Planificado","Por grabar","Grabado","En edición","Publicado"];
 function renderKanban(){
   const cols = ["Idea","Planificado","Por grabar","Grabado / En edición","Publicado"];
   const board = document.getElementById('kanban-board');
@@ -851,7 +755,7 @@ function renderKanban(){
             <div class="kanban-card" onclick="editItem('${i.id}')" style="cursor:pointer;">
               <div class="titulo">${escapeHtml(i.tema)}</div>
               <div class="meta">${fmtFecha(i.fecha)} · ${escapeHtml(i.tipo)}</div>
-              ${i.marca? `<div class="meta">🤝 ${escapeHtml(i.marca)}</div>`:''}
+              ${i.marca? `<div class="meta">${escapeHtml(i.marca)}</div>`:''}
             </div>
           `).join('')
         }
@@ -860,9 +764,6 @@ function renderKanban(){
   }).join('');
 }
 
-/* ============================================================
-   RENDER: MARCAS
-   ============================================================ */
 function renderMarcas(){
   const body = document.getElementById('marcas-body');
   if(brands.length===0){
@@ -889,9 +790,6 @@ function renderMarcas(){
   document.getElementById('marcas-datalist').innerHTML = brands.map(b=>`<option value="${escapeHtml(b.nombre)}">`).join('');
 }
 
-/* ============================================================
-   MODAL: ITEM (CONTENIDO)
-   ============================================================ */
 function openItemModal(){
   document.getElementById('item-modal-title').textContent = "Nuevo contenido";
   document.getElementById('item-id').value = "";
@@ -959,9 +857,6 @@ async function deleteItem(id){
   }
 }
 
-/* ============================================================
-   MODAL: MARCA
-   ============================================================ */
 function openBrandModal(){
   document.getElementById('brand-modal-title').textContent = "Nueva marca / convenio";
   document.getElementById('brand-id').value = "";
@@ -1017,16 +912,13 @@ async function deleteBrand(id){
   }
 }
 
-/* ============================================================
-   RESPALDO (EXPORT / IMPORT)
-   ============================================================ */
 function exportBackup(){
   const payload = {items, brands, exportedAt: new Date().toISOString()};
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `bari_talks_respaldo_${new Date().toISOString().slice(0,10)}.json`;
+  a.download = `barilife_respaldo_${new Date().toISOString().slice(0,10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -1039,7 +931,6 @@ function importBackup(e){
       const payload = JSON.parse(ev.target.result);
       if(payload.items) items = payload.items;
       if(payload.brands) brands = payload.brands;
-      saveData(); saveBrandsData();
       renderAll();
       alert("Respaldo importado correctamente.");
     }catch(err){
@@ -1050,9 +941,6 @@ function importBackup(e){
   e.target.value = "";
 }
 
-/* ============================================================
-   RENDER ALL
-   ============================================================ */
 function renderAll(){
   renderResumen();
   populateFilters();
@@ -1060,9 +948,7 @@ function renderAll(){
   renderKanban();
   renderMarcas();
 }
-// El primer render ocurre dentro de initApp() tras conectar con Supabase
 
-// Cerrar modales haciendo click fuera
 document.querySelectorAll('.modal-overlay').forEach(ov=>{
   ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
 });
