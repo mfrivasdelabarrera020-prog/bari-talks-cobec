@@ -271,6 +271,9 @@ tbody tr:last-child td{border-bottom:none;}
 }
 .action-btn:hover{background:var(--navy-3);}
 .action-btn svg{width:16px;height:16px;stroke:var(--texto-suave);}
+.action-btn.danger:hover{background:#fdf1f1;}
+.action-btn.danger svg{stroke:var(--rojo);}
+.row-actions{display:flex;gap:4px;}
 
 /* QUICK LINKS */
 .quick-links{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:28px;}
@@ -903,7 +906,7 @@ function renderResumen(){
   if(proximos.length===0){
     body.innerHTML = '<tr class="empty-row"><td colspan="7">No hay contenidos próximos.</td></tr>';
   } else {
-    body.innerHTML = proximos.map(i=>`
+    body.innerHTML = proximos.map((i,idx)=>`
       <tr>
         <td>${fmtFechaCell(i.fecha)}</td>
         <td><span class="type-badge ${typeClass(i.tipo)}">${typeIcon(i.tipo)}${escapeHtml(i.tipo)}</span></td>
@@ -911,7 +914,12 @@ function renderResumen(){
         <td>${escapeHtml(i.responsables)}</td>
         <td>${i.marca? `<span class="tag">${escapeHtml(i.marca)}</span>`:'—'}</td>
         <td><span class="status ${statusClass(i.estado)}"><span class="status-dot"></span>${i.estado}</span></td>
-        <td><button class="action-btn" onclick="editItem('${i.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+        <td><div class="row-actions">
+          <button class="action-btn" title="Editar" onclick="editItem('${i.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="action-btn" title="Subir" onclick="moveItem('${i.id}',-1)" ${idx===0?'disabled style="opacity:0.3"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button>
+          <button class="action-btn" title="Bajar" onclick="moveItem('${i.id}',1)" ${idx===proximos.length-1?'disabled style="opacity:0.3"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <button class="action-btn danger" title="Eliminar" onclick="deleteItem('${i.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+        </div></td>
       </tr>
     `).join('');
   }
@@ -978,7 +986,7 @@ function renderKanban(){
     if(col === "Grabado / En edición") group = items.filter(i=> i.estado==="Grabado" || i.estado==="En edición");
     else group = items.filter(i=> i.estado===col);
     group.sort((a,b)=> new Date(a.fecha)-new Date(b.fecha));
-    return `<div class="kanban-col"><h4>${col} <span>${group.length}</span></h4>${group.length===0?'<div style="color:var(--texto-suave);font-size:12px;font-style:italic;">Sin contenidos</div>':group.map(i=>`<div class="kanban-card" onclick="editItem('${i.id}')"><div class="titulo">${escapeHtml(i.tema)}</div><div class="meta">${fmtFecha(i.fecha)} · ${escapeHtml(i.tipo)}</div>${i.marca?`<div class="meta">${escapeHtml(i.marca)}</div>`:''}</div>`).join('')}</div>`;
+    return `<div class="kanban-col"><h4>${col} <span>${group.length}</span></h4>${group.length===0?'<div style="color:var(--texto-suave);font-size:12px;font-style:italic;">Sin contenidos</div>':group.map((i,idx)=>`<div class="kanban-card"><div class="titulo" onclick="editItem('${i.id}')" style="cursor:pointer;">${escapeHtml(i.tema)}</div><div class="meta">${fmtFecha(i.fecha)} · ${escapeHtml(i.tipo)}</div>${i.marca?`<div class="meta">${escapeHtml(i.marca)}</div>`:''}<div class="row-actions" style="margin-top:8px;"><button class="action-btn" title="Editar" onclick="editItem('${i.id}')" style="width:26px;height:26px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="action-btn" title="Subir" onclick="moveItem('${i.id}',-1)" style="width:26px;height:26px;" ${idx===0?'disabled style="opacity:0.3;width:26px;height:26px;"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button><button class="action-btn" title="Bajar" onclick="moveItem('${i.id}',1)" style="width:26px;height:26px;" ${idx===group.length-1?'disabled style="opacity:0.3;width:26px;height:26px;"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button><button class="action-btn danger" title="Eliminar" onclick="deleteItem('${i.id}')" style="width:26px;height:26px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></div>`).join('')}</div>`;
   }).join('');
 }
 
@@ -1068,6 +1076,19 @@ async function saveItem(){
   };
   const ok = await upsertItem(data);
   if(ok){ const idx = items.findIndex(x=>x.id===data.id); if(idx>=0) items[idx]=data; else items.push(data); closeItemModal(); renderAll(); }
+}
+async function moveItem(id, dir){
+  const idx = items.findIndex(x=>x.id===id);
+  if(idx<0) return;
+  const target = idx + dir;
+  if(target<0 || target>=items.length) return;
+  const tempFecha = items[idx].fecha;
+  items[idx].fecha = items[target].fecha;
+  items[target].fecha = tempFecha;
+  await upsertItem(items[idx]);
+  await upsertItem(items[target]);
+  items.sort((a,b)=> new Date(a.fecha)-new Date(b.fecha));
+  renderAll();
 }
 async function deleteItem(id){
   if(!confirm("¿Eliminar este contenido?")) return;
